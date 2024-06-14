@@ -4,3 +4,8 @@
 node_modules/
 
 *.tsbuildinfo
+
+# ignore for now
+.nodegit
+.nodegit/*
+.nodegit/**/*
