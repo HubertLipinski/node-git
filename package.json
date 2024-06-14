@@ -1,0 +1,26 @@
+{
+  "type": "module",
+  "name": "node-git",
+  "version": "1.0.0",
+  "description": "Simple implementation of Git filesystem in Node.js",
+  "main": "dist/index.js",
+  "bin": {
+    "node-git": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "npx tsc",
+    "test": "mocha"
+  },
+  "keywords": [
+    "cli",
+    "git implementation"
+  ],
+  "author": "Hubert Lipiński <hubertlipinskipl@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.14.2",
+    "chai": "^5.1.1",
+    "mocha": "^10.4.0",
+    "typescript": "^5.4.5"
+  }
+}
