@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "npx tsc",
+    "watch": "npx tsc --watch",
     "test": "mocha"
   },
   "keywords": [
@@ -22,5 +23,8 @@
     "chai": "^5.1.1",
     "mocha": "^10.4.0",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "commander": "^12.1.0"
   }
 }

@@ -1,17 +1,8 @@
-export default (args) => {
-    // TODO: more flags
-    const hasFlag = args.indexOf('-p');
-    let [flag, data] = ['', args[0]];
-    if (hasFlag > -1) {
-        flag = args[hasFlag];
-        data = args[hasFlag + 1];
-    }
-    console.log(flag, data);
-    switch (flag) {
-        case "-p":
-            console.log("-p flag provided", data);
-            break;
-        default:
-            console.log("no flag provided", data);
-    }
+export default (type, object, options) => {
+    console.log(type, object, options);
+    // if (options.p) {
+    //   console.log("-p flag provided", path);
+    // }
+    // console.log("no flag provided", path);
+    // return {path, options};
 };

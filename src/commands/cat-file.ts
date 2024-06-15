@@ -1,21 +1,14 @@
-export default (args: string[]) => {
+import fs from "node:fs"
 
-    // TODO: more flags
-    const hasFlag = args.indexOf('-p')
-    let [flag, data] = ['', args[0]];
-    
-    if (hasFlag > -1) {
-        flag = args[hasFlag]
-        data = args[hasFlag + 1]
-    }
+export default (type: ObjectType, object: string, options: CommandOptions) => {
 
-    console.log(flag, data)
+  console.log(type, object, options)
 
-  switch (flag) {
-    case "-p":
-      console.log("-p flag provided", data);
-      break;
-    default:
-      console.log("no flag provided", data);
-  }
+    // if (options.p) {
+    //   console.log("-p flag provided", path);
+    // }
+
+    // console.log("no flag provided", path);
+
+    // return {path, options};
 };
