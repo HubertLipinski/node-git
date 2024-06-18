@@ -9,3 +9,6 @@ node_modules/
 .nodegit
 .nodegit/*
 .nodegit/**/*
+.nodegitignore
+
+dist/

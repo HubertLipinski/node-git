@@ -2,7 +2,7 @@ import path from "path";
 
 const rootDirectory: string = process.cwd()
 
-const rootFolder: string = process.env._NODE_GIT_DIRECTORY || ".nodegit"
+const rootFolder: string = process.env._NODE_GIT_DIRECTORY ?? ".nodegit"
 
 const configDir: string = path.join(rootDirectory, rootFolder)
 

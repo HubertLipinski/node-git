@@ -1,14 +1,40 @@
-import fs from "node:fs"
+import { getObjectDetails } from "../util/filesystem.js";
+import { formatTreeEntries, readTreeEntries } from "../util/objects/tree.js";
 
-export default (type: ObjectType, object: string, options: CommandOptions) => {
+export default (hash: string, options: CommandOptions) => {
+  const object = getObjectDetails(hash)
 
-  console.log(type, object, options)
+  if (options.t) {
+    process.stdout.write(object.type)
+    return
+  }
 
-    // if (options.p) {
-    //   console.log("-p flag provided", path);
-    // }
+  if (options.s) {
+    process.stdout.write(object.size.toString())
+    return
+  }
 
-    // console.log("no flag provided", path);
+  if (!options.p) {
+    process.stdout.write('Missing option -p')
+    return
+  }
 
-    // return {path, options};
+  if (object.type === ObjectType.Blob) {
+    const blobContent = object.content.toString().split('\x00').join('')
+    process.stdout.write(blobContent)
+    return
+  }
+
+  if (object.type === ObjectType.Tree) {
+    const treeEntries = readTreeEntries(object.content)
+    process.stdout.write(formatTreeEntries(treeEntries))
+    return
+  }
+
+  if (object.type === ObjectType.Commit) {
+    console.info("Object type: Commit")
+    throw new Error('Not implemented.')
+  }
+
+  throw new Error(`Unknown object ${hash}`)
 };
