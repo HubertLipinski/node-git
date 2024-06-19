@@ -15,7 +15,7 @@ const hashToPath = (hash: string): HashFileLocation => {
   }
 }
 
-const objectExist = (hash: string, type: ObjectType = ObjectType.Blob): boolean => {
+const objectExist = (hash: string): boolean => {
   const fileLocation = hashToPath(hash)
   return fs.existsSync(absolutePath('objects', fileLocation.directory, fileLocation.filename))
 }
