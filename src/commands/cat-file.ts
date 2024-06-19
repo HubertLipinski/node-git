@@ -1,5 +1,5 @@
-import { getObjectDetails } from '../util/filesystem.js'
-import { formatTreeEntries, readTreeEntries } from '../util/objects/tree.js'
+import { getObjectDetails } from '../util/filesystem'
+import { formatTreeEntries, readTreeEntries } from '../util/objects/tree'
 
 export default (hash: string, options: CommandOptions) => {
   const object = getObjectDetails(hash)

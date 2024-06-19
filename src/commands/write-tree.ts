@@ -2,10 +2,10 @@ import path from 'path'
 import fs from 'node:fs'
 import zlib from 'node:zlib'
 
-import { generateHash } from '../util/hash.js'
-import { getObjectPath } from '../util/filesystem.js'
-import { writeBlobObject } from '../util/objects/blob.js'
-import { getIgnoredFiles } from '../util/config.js'
+import { generateHash } from '../util/hash'
+import { getObjectPath } from '../util/filesystem'
+import { writeBlobObject } from '../util/objects/blob'
+import { getIgnoredFiles } from '../util/config'
 
 export default function writeTree(directory: string = './'): string {
   const ignoredFiles = getIgnoredFiles()
