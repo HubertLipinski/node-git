@@ -1,8 +1,8 @@
 import fs from 'node:fs'
 import zlib from 'node:zlib'
 
-import { generateHash } from '../hash.js'
-import { writeObject } from '../filesystem.js'
+import { generateHash } from '../hash'
+import { writeObject } from '../filesystem'
 
 const writeBlobObject = (filePath: string): string => {
   if (!fs.existsSync(filePath)) {

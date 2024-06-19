@@ -2,10 +2,10 @@
 
 import { Command } from 'commander'
 
-import init from './commands/init.js'
-import catFile from './commands/cat-file.js'
-import hashObject from './commands/hash-object.js'
-import writeTree from './commands/write-tree.js'
+import init from './commands/init'
+import catFile from './commands/cat-file'
+import hashObject from './commands/hash-object'
+import writeTree from './commands/write-tree'
 
 const cmd = new Command()
   .name('node-git')

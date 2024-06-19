@@ -1,7 +1,6 @@
 import fs from 'node:fs'
 import zlib from 'node:zlib'
-
-import { absolutePath } from '../util/directory.js'
+import { absolutePath } from './directory'
 
 interface HashFileLocation {
   directory: string
