@@ -1,5 +1,5 @@
-import { getObjectDetails } from "../util/filesystem.js";
-import { formatTreeEntries, readTreeEntries } from "../util/objects/tree.js";
+import { getObjectDetails } from '../util/filesystem.js'
+import { formatTreeEntries, readTreeEntries } from '../util/objects/tree.js'
 
 export default (hash: string, options: CommandOptions) => {
   const object = getObjectDetails(hash)
@@ -32,9 +32,9 @@ export default (hash: string, options: CommandOptions) => {
   }
 
   if (object.type === ObjectType.Commit) {
-    console.info("Object type: Commit")
+    console.info('Object type: Commit')
     throw new Error('Not implemented.')
   }
 
   throw new Error(`Unknown object ${hash}`)
-};
+}

@@ -1,0 +1,11 @@
+dist
+node_modules
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+.nodegit
+.nodegitignore

@@ -9,16 +9,16 @@ const enum ObjectType {
 }
 
 interface ObjectDetails {
-  type: ObjectType,
-  size: number,
+  type: ObjectType
+  size: number
   content: Buffer
 }
 
 interface TreeEntry {
-  mode: string,
-  type?: string,
-  hash: string,
+  mode: string
+  type?: string
+  hash: string
   filename: string
 }
 
-type FileType = 'tree' | 'blob' | 'commit' | 'unknown';
+type FileType = 'tree' | 'blob' | 'commit' | 'unknown'

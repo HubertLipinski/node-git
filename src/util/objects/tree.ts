@@ -1,19 +1,14 @@
 const readTreeEntries = (buffer: Buffer): TreeEntry[] => {
   const entries: TreeEntry[] = []
   const hashLength = 40
-  let index = 0;
+  let index = 0
 
   while (index < buffer.length - hashLength + 1) {
     const nullChar = buffer.indexOf(0, index)
 
-    const [mode, filename] = buffer
-      .subarray(index, nullChar)
-      .toString('utf8')
-      .split(' ')
+    const [mode, filename] = buffer.subarray(index, nullChar).toString('utf8').split(' ')
 
-    let hash = buffer
-      .subarray(nullChar + 1, nullChar + hashLength + 1)
-      .toString('utf8')
+    const hash = buffer.subarray(nullChar + 1, nullChar + hashLength + 1).toString('utf8')
 
     index = nullChar + hashLength + 1
 
@@ -21,7 +16,7 @@ const readTreeEntries = (buffer: Buffer): TreeEntry[] => {
       mode,
       type: fileMode(mode),
       hash,
-      filename
+      filename,
     })
   }
 
@@ -29,9 +24,7 @@ const readTreeEntries = (buffer: Buffer): TreeEntry[] => {
 }
 
 const formatTreeEntries = (entries: TreeEntry[]): string => {
-  return entries
-    .map(entry => `${entry.mode} ${entry.type} ${entry.hash}    ${entry.filename}`)
-    .join('\n')
+  return entries.map((entry) => `${entry.mode} ${entry.type} ${entry.hash}    ${entry.filename}`).join('\n')
 }
 
 const fileMode = (value: string): FileType => {
@@ -51,8 +44,4 @@ const fileMode = (value: string): FileType => {
   }
 }
 
-export {
-  readTreeEntries,
-  formatTreeEntries,
-  fileMode
-}
+export { readTreeEntries, formatTreeEntries, fileMode }
