@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 
-import { generateHash } from '../util/hash'
-import { writeBlobObject } from '../util/objects/blob'
+import { generateHash } from '../utils/hash'
+import { writeBlobObject } from '../utils/objects/blob'
 
 export default (path: string, options: CommandOptions) => {
   const file = fs.readFileSync(path)

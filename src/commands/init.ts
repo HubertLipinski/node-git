@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 
-import { configDir, absolutePath } from '../util/directory'
+import { configDir, absolutePath } from '../utils/directory'
 
 export default (opts: CommandOptions): void => {
   if (fs.existsSync(configDir) && !opts.f) {

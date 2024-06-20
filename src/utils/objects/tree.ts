@@ -14,7 +14,7 @@ const readTreeEntries = (buffer: Buffer): TreeEntry[] => {
 
     entries.push({
       mode,
-      type: fileMode(mode),
+      type: _fileMode(mode),
       hash,
       filename,
     })
@@ -27,7 +27,7 @@ const formatTreeEntries = (entries: TreeEntry[]): string => {
   return entries.map((entry) => `${entry.mode} ${entry.type} ${entry.hash}    ${entry.filename}`).join('\n')
 }
 
-const fileMode = (value: string): FileType => {
+const _fileMode = (value: string): FileType => {
   switch (value) {
     case '040000':
       return 'tree'
@@ -37,11 +37,9 @@ const fileMode = (value: string): FileType => {
       return 'blob'
     case '120000':
       return 'blob'
-    case '160000':
-      return 'commit'
     default:
       throw new Error(`Unknown file mode: ${value}`)
   }
 }
 
-export { readTreeEntries, formatTreeEntries, fileMode }
+export { readTreeEntries, formatTreeEntries }

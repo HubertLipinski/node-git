@@ -29,7 +29,7 @@ const getObjectPath = (hash: string, absolute: boolean = true): string => {
   return absolutePath('objects', fileLocation.directory, fileLocation.filename)
 }
 
-const getObjectDetails = (hash: string): ObjectDetails => {
+const getObject = (hash: string): Buffer => {
   const fileLocation = hashToPath(hash)
 
   const path = absolutePath('objects', fileLocation.directory, fileLocation.filename)
@@ -38,7 +38,11 @@ const getObjectDetails = (hash: string): ObjectDetails => {
     throw new Error(`File not found: ${hash}`)
   }
 
-  const content: Buffer = fs.readFileSync(path)
+  return fs.readFileSync(path)
+}
+
+const getObjectDetails = (hash: string): ObjectDetails => {
+  const content: Buffer = getObject(hash)
   const inflatedBuffer: Buffer = zlib.inflateSync(content)
   const inflatedString: string = inflatedBuffer.toString()
 
@@ -63,4 +67,4 @@ const writeObject = (hash: string, data: Buffer): void => {
   fs.writeFileSync(getObjectPath(hash), data)
 }
 
-export { hashToPath, objectExist, getObjectPath, getObjectDetails, writeObject }
+export { hashToPath, objectExist, getObject, getObjectPath, getObjectDetails, writeObject }

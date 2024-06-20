@@ -1,11 +1,13 @@
 #! /usr/bin/env node
 
-import { Command } from 'commander'
+import { Command, Option } from 'commander'
 
 import init from './commands/init'
 import catFile from './commands/cat-file'
 import hashObject from './commands/hash-object'
 import writeTree from './commands/write-tree'
+import commitTree from './commands/commit-tree'
+import log from './commands/log'
 
 const cmd = new Command()
   .name('node-git')
@@ -46,6 +48,27 @@ cmd
   .description('Create a tree object from the current index.')
   .action(() => {
     process.stdout.write(writeTree())
+  })
+
+cmd
+  .command('commit-tree')
+  .description('Create a new commit object')
+  .argument('<tree>', 'Existing tree object')
+  .addOption(new Option('-p, --parent <hash>', 'Commit parent'))
+  .addOption(new Option('-m, --message <string>', 'Commit message').makeOptionMandatory())
+  .usage('<tree> [-pm]')
+  .action((tree, options) => {
+    console.log(tree, options)
+    process.stdout.write(commitTree(tree, options))
+  })
+
+cmd
+  .command('log')
+  .description('Log')
+  .argument('[commit]', 'Commit to start at.')
+  .usage('[commit]')
+  .action((commit) => {
+    console.log(log(commit))
   })
 
 cmd.parse(process.argv)
