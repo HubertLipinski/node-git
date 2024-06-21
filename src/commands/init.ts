@@ -20,6 +20,6 @@ export default (opts: CommandOptions): void => {
 const bootstrapCoreFiles = (): void => {
   fs.mkdirSync(configDir, { recursive: true })
   fs.mkdirSync(absolutePath('objects'), { recursive: true })
-  fs.mkdirSync(absolutePath('refs'), { recursive: true })
+  fs.mkdirSync(absolutePath('refs', 'heads'), { recursive: true })
   fs.writeFileSync(absolutePath('HEAD'), 'ref: refs/heads/main\n')
 }

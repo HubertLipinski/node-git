@@ -8,6 +8,7 @@ import hashObject from './commands/hash-object'
 import writeTree from './commands/write-tree'
 import commitTree from './commands/commit-tree'
 import log from './commands/log'
+import { readIndex } from './utils/gitIndex'
 
 const cmd = new Command()
   .name('node-git')
@@ -64,11 +65,18 @@ cmd
 
 cmd
   .command('log')
-  .description('Log')
-  .argument('[commit]', 'Commit to start at.')
-  .usage('[commit]')
+  .description('Show commit logs')
+  .argument('<commit>', 'Commit to start at.')
+  .usage('<commit>')
   .action((commit) => {
     console.log(log(commit))
+  })
+
+cmd
+  .command('ls-files')
+  .description('Show information about files in the index and the working tree')
+  .action(() => {
+    console.log(readIndex()) // TODO: implement
   })
 
 cmd.parse(process.argv)
