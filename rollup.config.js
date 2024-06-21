@@ -15,10 +15,6 @@ export default defineConfig({
   input: 'src/index.ts',
   output: [
     {
-      file: outDir('index.js'),
-      format: 'es',
-    },
-    {
       file: outDir('index.min.js'),
       format: 'es',
       plugins: [terser()],
