@@ -8,7 +8,7 @@ import hashObject from './commands/hash-object'
 import writeTree from './commands/write-tree'
 import commitTree from './commands/commit-tree'
 import log from './commands/log'
-import { readIndex } from './utils/gitIndex'
+import { readIndex, writeIndex } from './utils/gitIndex'
 
 const cmd = new Command()
   .name('node-git')

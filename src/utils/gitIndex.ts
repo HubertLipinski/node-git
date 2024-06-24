@@ -2,12 +2,15 @@ import fs from 'node:fs'
 import assert from 'node:assert'
 
 // https://github.com/git/git/blob/master/Documentation/gitformat-index.txt
+
+const indexPath = '.nodegit/test'
+
 const readIndex = () => {
-  if (!fs.existsSync('.nodegit/index')) {
+  if (!fs.existsSync(indexPath)) {
     throw new Error('Index does not exist')
   }
 
-  const binary = fs.readFileSync('.nodegit/index', 'binary')
+  const binary = fs.readFileSync(indexPath, 'binary')
   const buffer = Buffer.from(binary, 'binary')
 
   const header = buffer.subarray(0, 12)
@@ -22,10 +25,10 @@ const readIndex = () => {
   let index = 0
 
   const content = buffer.subarray(header.length)
-
   for (let i = 0; i < contentLength; i++) {
-    const ctime = content.subarray(index + 0, index + 4)
+    const ctime = content.subarray(index, index + 4)
     const mtime = content.subarray(index + 8, index + 12)
+    // time nanoseconds in [<4,8>, <14,16>] - we don't use it
 
     const dev = content.subarray(index + 16, index + 20)
     const ino = content.subarray(index + 20, index + 24)
@@ -54,7 +57,8 @@ const readIndex = () => {
       throw new Error(`File name length is too long: ${fileNameLength} > 4095 bytes`)
     }
 
-    index = 8 * Math.ceil(index / 8) // skip as much padded bytes as possible
+    // skip as much padded bytes as possible
+    // index = 8 * Math.ceil(index / 8)
 
     entries.push({
       createdTime: parseDate(ctime),
@@ -79,8 +83,50 @@ const readIndex = () => {
   return entries
 }
 
+const writeIndex = () => {
+  const entries = readIndex()
+
+  const header = Buffer.alloc(12)
+  header.write('DIRC', 0)
+  header.writeUintBE(2, 4, 4)
+  header.writeUintBE(entries.length, 8, 4)
+
+  const length = Buffer.byteLength(JSON.stringify(entries[0]), 'binary') * 8
+  const content = Buffer.alloc(length)
+
+  let offset = 0
+  for (const entry of entries) {
+    content.writeUintBE(entry.createdTime.getTime() / 1000, offset, 4)
+    content.writeUintBE(0, offset + 4, 4) // we don't use it, write empty bytes
+
+    content.writeUintBE(entry.modifiedTime.getTime() / 1000, offset + 8, 4)
+    content.writeUintBE(0, offset + 12, 4) // we don't use it, write empty bytes
+
+    content.writeUintBE(parseInt(entry.dev, 16), offset + 16, 4)
+    content.writeUintBE(parseInt(entry.ino, 16), offset + 20, 4)
+    content.writeUintBE(parseInt(entry.mode, 16), offset + 24, 4)
+    content.writeUintBE(parseInt(entry.uid, 16), offset + 28, 4)
+    content.writeUintBE(parseInt(entry.gid, 16), offset + 32, 4)
+
+    content.writeUint32BE(entry.size, offset + 36)
+
+    const hash = Buffer.from(entry.hash, 'hex')
+    hash.copy(content, offset + 40)
+
+    content.writeUIntBE(entry.fileName.length, offset + 60, 2)
+
+    offset += 62
+
+    content.write(entry.fileName, offset, offset + entry.fileName.length, 'utf8')
+
+    offset += entry.fileName.length + 1
+  }
+
+  fs.writeFileSync(indexPath, Buffer.concat([header, content]))
+}
+
 const parseDate = (time: Buffer): Date => {
   return new Date(parseInt(time.toString('hex'), 16) * 1000)
 }
 
-export { readIndex }
+export { readIndex, writeIndex }
