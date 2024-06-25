@@ -3,7 +3,7 @@ import assert from 'node:assert'
 
 // https://github.com/git/git/blob/master/Documentation/gitformat-index.txt
 
-const indexPath = '.nodegit/test'
+const indexPath = '.nodegit/index'
 
 const readIndex = () => {
   if (!fs.existsSync(indexPath)) {

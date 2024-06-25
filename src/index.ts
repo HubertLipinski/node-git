@@ -8,7 +8,9 @@ import hashObject from './commands/hash-object'
 import writeTree from './commands/write-tree'
 import commitTree from './commands/commit-tree'
 import log from './commands/log'
-import { readIndex, writeIndex } from './utils/gitIndex'
+import { readIndex } from './utils/gitIndex'
+import status from './commands/status'
+import showRef from './commands/show-ref'
 
 const cmd = new Command()
   .name('node-git')
@@ -25,7 +27,7 @@ cmd
 cmd
   .command('cat-file')
   .description('Provide information for repository objects.')
-  .argument('<sha1>', 'Object hash') // error: missing required argument 'sha1'
+  .argument('<sha1>', 'Object hash')
   .option('-p', 'Pretty print object content')
   .option('-t', 'Instead of the content, show the object type identified by <object>')
   .option('-s', 'Instead of the content, show the object size identified by <object>')
@@ -77,6 +79,13 @@ cmd
   .description('Show information about files in the index and the working tree')
   .action(() => {
     console.log(readIndex()) // TODO: implement
+  })
+
+cmd
+  .command('show-ref')
+  .description('List references in a local repository')
+  .action(() => {
+    showRef()
   })
 
 cmd.parse(process.argv)
