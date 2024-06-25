@@ -8,9 +8,11 @@ import hashObject from './commands/hash-object'
 import writeTree from './commands/write-tree'
 import commitTree from './commands/commit-tree'
 import log from './commands/log'
-import { readIndex } from './utils/gitIndex'
+import { readIndex, writeIndex } from './utils/gitIndex'
 import status from './commands/status'
 import showRef from './commands/show-ref'
+import { resolveObject } from './utils/repository'
+import revParse from './commands/rev-parse'
 
 const cmd = new Command()
   .name('node-git')
@@ -86,6 +88,24 @@ cmd
   .description('List references in a local repository')
   .action(() => {
     showRef()
+  })
+
+cmd
+  .command('status')
+  .description('Status of the working tree and the index')
+  .action(() => {
+    status()
+  })
+
+cmd
+  .command('rev-parse')
+  .description('Parse revision (or other objects) identifiers')
+  .argument('<name>', 'Name to parse')
+  .addOption(
+    new Option('-t, --type <type>', 'Specify the expected type').choices(['blob', 'commit', 'tree']).default(null),
+  )
+  .action((name, options) => {
+    revParse(name, options.type)
   })
 
 cmd.parse(process.argv)

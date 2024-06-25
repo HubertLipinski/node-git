@@ -2,23 +2,8 @@ import fs from 'node:fs'
 import path from 'path'
 
 import { absolutePath, configDir } from './directory'
+import { resolveReference } from './repository'
 
-const resolveRef = (ref: string): string => {
-  let filePath = ''
-  if (ref === 'HEAD') {
-    filePath = absolutePath('HEAD')
-  } else {
-    filePath = !path.isAbsolute(ref) ? absolutePath(ref) : ref
-  }
-
-  const content = fs.readFileSync(filePath).toString().trim()
-
-  if (content.startsWith('ref: ')) {
-    return resolveRef(content.slice(5))
-  }
-
-  return content
-}
 const refList = (filePath: string | null = null): Map<string, string> => {
   if (!filePath) {
     filePath = absolutePath('refs')
@@ -37,19 +22,19 @@ const refList = (filePath: string | null = null): Map<string, string> => {
         list.set(key, value)
       }
     } else {
-      const content = resolveRef(fullPath)
+      const content = resolveReference(fullPath, true)
       let key = path.relative(configDir, fullPath)
 
-      // fix windows ugly path
+      // format ugly windows path
       if (path.sep === '\\') {
         key = key.replace(/\\/g, '/')
       }
 
-      list.set(key, content)
+      list.set(key, content!)
     }
   }
 
   return list
 }
 
-export { resolveRef, refList }
+export { refList }

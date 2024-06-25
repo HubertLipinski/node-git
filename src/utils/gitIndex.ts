@@ -1,13 +1,13 @@
 import fs from 'node:fs'
 import assert from 'node:assert'
+import { absolutePath } from './directory'
 
 // https://github.com/git/git/blob/master/Documentation/gitformat-index.txt
 
-const indexPath = '.nodegit/index'
-
 const readIndex = () => {
+  const indexPath = absolutePath('index')
   if (!fs.existsSync(indexPath)) {
-    throw new Error('Index does not exist')
+    return []
   }
 
   const binary = fs.readFileSync(indexPath, 'binary')
@@ -58,7 +58,7 @@ const readIndex = () => {
     }
 
     // skip as much padded bytes as possible
-    // index = 8 * Math.ceil(index / 8)
+    index = 8 * Math.ceil(index / 8)
 
     entries.push({
       createdTime: parseDate(ctime),
@@ -91,7 +91,7 @@ const writeIndex = () => {
   header.writeUintBE(2, 4, 4)
   header.writeUintBE(entries.length, 8, 4)
 
-  const length = Buffer.byteLength(JSON.stringify(entries[0]), 'binary') * 8
+  const length = Buffer.byteLength(JSON.stringify(entries[0]), 'binary') * entries.length
   const content = Buffer.alloc(length)
 
   let offset = 0
@@ -120,9 +120,17 @@ const writeIndex = () => {
     content.write(entry.fileName, offset, offset + entry.fileName.length, 'utf8')
 
     offset += entry.fileName.length + 1
+
+    // pad to 8 bytes if necessary
+    if (offset % 8 != 0) {
+      const pad = 8 - (offset % 8)
+      const padBuffer = Buffer.alloc(pad, 0, 'binary')
+      padBuffer.copy(content, offset)
+      offset += pad
+    }
   }
 
-  fs.writeFileSync(indexPath, Buffer.concat([header, content]))
+  fs.writeFileSync(absolutePath('index'), Buffer.concat([header, content]))
 }
 
 const parseDate = (time: Buffer): Date => {
