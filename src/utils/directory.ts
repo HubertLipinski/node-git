@@ -11,4 +11,8 @@ const absolutePath = (...args: string[]): string => {
   return path.join(configDir, ...args)
 }
 
-export { rootFolder, rootDirectory, configDir, absolutePath }
+const workingDrectory = (filePath = ''): string => {
+  return path.join(rootDirectory, filePath)
+}
+
+export { rootFolder, rootDirectory, configDir, absolutePath, workingDrectory }

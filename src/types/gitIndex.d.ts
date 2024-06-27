@@ -8,7 +8,7 @@ interface IndexEntry {
   gid: string
   size: number
   hash: string
-  flags: {
+  flags?: {
     binary: string
     valid: string
     extended: string

@@ -37,4 +37,16 @@ const refList = (filePath: string | null = null): Map<string, string> => {
   return list
 }
 
-export { refList }
+const localRef = (name: string): string => {
+  return `refs/heads/${name}`
+}
+
+const localRefPath = (name: string): string => {
+  return absolutePath(localRef(name))
+}
+
+const refExists = (name: string): boolean => {
+  return fs.existsSync(localRefPath(name))
+}
+
+export { refList, localRef, refExists }

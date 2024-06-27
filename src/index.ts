@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-import { Command, Option } from 'commander'
+import { Argument, Command, Option } from 'commander'
 
 import init from './commands/init'
 import catFile from './commands/cat-file'
@@ -12,6 +12,10 @@ import status from './commands/status'
 import showRef from './commands/show-ref'
 import revParse from './commands/rev-parse'
 import lsFiles from './commands/ls-files'
+import branch from './commands/branch'
+import { repositoryHasChanges } from './utils/repository'
+import add from './commands/add'
+import commit from './commands/commit'
 
 const cmd = new Command()
   .name('node-git')
@@ -106,6 +110,36 @@ cmd
   )
   .action((name, options) => {
     revParse(name, options.type)
+  })
+
+cmd
+  .command('checkout')
+  .description('Switch branches or restore working tree files')
+  .action(() => {
+    console.log('checkout')
+  })
+
+cmd
+  .command('branch')
+  .description('List, create, or delete branches')
+  .addArgument(new Argument('[branch]', 'Branch name').default(null))
+  .action((name) => {
+    branch(name)
+  })
+
+cmd
+  .command('add')
+  .description('Add file contents to the index')
+  .action(() => {
+    add()
+  })
+
+cmd
+  .command('commit')
+  .description('Record changes to the repository')
+  .addOption(new Option('-m, --message <message>', 'Commit message').default(null))
+  .action((options) => {
+    commit(options.message)
   })
 
 cmd.parse(process.argv)

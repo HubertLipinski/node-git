@@ -46,8 +46,7 @@ const readIndex = (): GitIndex => {
     const flags: string = content.readUIntBE(index + 60, 2).toString(2)
 
     const flagValid = flags[0].toString()
-    const flagExtended = flags[1].toString()
-    // assert(!flagExtended, 'Flag extended is not supported')
+    const flagExtended = flags[1]?.toString() ?? '-1'
     const flagStage = parseInt(flags.slice(1, 3), 2)
     const fileNameLength = parseInt(flags, 2) & 0b0000111111111111
     let fileName: string | null = null
@@ -91,8 +90,13 @@ const readIndex = (): GitIndex => {
   }
 }
 
-const writeIndex = () => {
-  const index = readIndex()
+const writeIndex = (gitIndex: GitIndex | null = null) => {
+  let index
+  if (gitIndex === null) {
+    index = readIndex()
+  } else {
+    index = gitIndex
+  }
 
   const header = Buffer.alloc(12)
   header.write('DIRC', 0)
@@ -104,10 +108,10 @@ const writeIndex = () => {
 
   let offset = 0
   for (const entry of index.entries) {
-    content.writeUintBE(entry.createdTime.getTime() / 1000, offset, 4)
+    content.writeUintBE(parseInt((new Date(entry.createdTime).getTime() / 1000).toFixed(0)), offset, 4)
     content.writeUintBE(0, offset + 4, 4) // we don't use it, write empty bytes
 
-    content.writeUintBE(entry.modifiedTime.getTime() / 1000, offset + 8, 4)
+    content.writeUintBE(parseInt((new Date(entry.modifiedTime).getTime() / 1000).toFixed(0)), offset + 8, 4)
     content.writeUintBE(0, offset + 12, 4) // we don't use it, write empty bytes
 
     content.writeUintBE(parseInt(entry.dev, 16), offset + 16, 4)

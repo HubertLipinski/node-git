@@ -2,12 +2,24 @@ import fs from 'node:fs'
 import { absolutePath } from './directory'
 import { getObjectDetails } from './filesystem'
 import { parseCommit } from './objects/commit'
+import { refExists } from './ref'
+import { getActiveBranch } from './branch'
+
+const repositoryHasChanges = (): boolean => {
+  /**
+   * Check if the repository has changes.
+   * This is edge case when the repository was just initialized
+   * therefore it doesn't have any HEAD or tree data, and we cannot proceed.
+   * This is also the case in original git implementation where the git throws fatal error
+   */
+
+  const hasIndex = fs.existsSync(absolutePath('index'))
+  const hasMasterRef = refExists(getActiveBranch() ?? 'master')
+
+  return hasIndex && hasMasterRef
+}
 
 const resolveObject = (name: string): string[] => {
-  if (name.trim().length === 0) {
-    throw new Error('Whoops...')
-  }
-
   if (name === 'HEAD') {
     return [<string>resolveReference(name)]
   }
@@ -37,14 +49,10 @@ const resolveReference = (ref: string, systemPath: boolean = false): string | nu
   const path = systemPath ? ref : absolutePath(ref)
 
   if (!fs.existsSync(path)) {
-    // empty repository - no commit data
-    if (ref === 'refs/heads/master') {
-      throw new Error('This is empty repository. Make some changes first.')
-    }
     return null
   }
 
-  const content = fs.readFileSync(path).toString().trim()
+  const content = fs.readFileSync(path).toString().trim().replace('\n', '')
 
   if (content.startsWith('ref: ')) {
     return resolveReference(content.slice(5))
@@ -82,4 +90,4 @@ const findObject = (sha: string, format: null | ObjectType = null, follow: boole
   return hash
 }
 
-export { resolveObject, resolveReference, findObject }
+export { repositoryHasChanges, resolveObject, resolveReference, findObject }
