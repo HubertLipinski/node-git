@@ -1,3 +1,5 @@
+import { readIndex } from '../gitIndex'
+
 const readTreeEntries = (buffer: Buffer): TreeEntry[] => {
   const entries: TreeEntry[] = []
   const hashLength = 40
@@ -27,6 +29,14 @@ const formatTreeEntries = (entries: TreeEntry[]): string => {
   return entries.map((entry) => `${entry.mode} ${entry.type} ${entry.hash}    ${entry.filename}`).join('\n')
 }
 
+const treeFromIndex = () => {
+  const index = readIndex()
+
+  for (const entry of index.entries) {
+    console.log(entry)
+  }
+}
+
 const _fileMode = (value: string): FileType => {
   switch (value) {
     case '040000':
@@ -42,4 +52,4 @@ const _fileMode = (value: string): FileType => {
   }
 }
 
-export { readTreeEntries, formatTreeEntries }
+export { readTreeEntries, formatTreeEntries, treeFromIndex }
