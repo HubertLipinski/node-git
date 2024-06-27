@@ -8,11 +8,10 @@ import hashObject from './commands/hash-object'
 import writeTree from './commands/write-tree'
 import commitTree from './commands/commit-tree'
 import log from './commands/log'
-import { readIndex, writeIndex } from './utils/gitIndex'
 import status from './commands/status'
 import showRef from './commands/show-ref'
-import { resolveObject } from './utils/repository'
 import revParse from './commands/rev-parse'
+import lsFiles from './commands/ls-files'
 
 const cmd = new Command()
   .name('node-git')
@@ -79,8 +78,9 @@ cmd
 cmd
   .command('ls-files')
   .description('Show information about files in the index and the working tree')
-  .action(() => {
-    console.log(readIndex()) // TODO: implement
+  .option('--verbose', 'Show verbose output')
+  .action((options) => {
+    lsFiles(options)
   })
 
 cmd

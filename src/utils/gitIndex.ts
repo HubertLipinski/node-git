@@ -4,10 +4,14 @@ import { absolutePath } from './directory'
 
 // https://github.com/git/git/blob/master/Documentation/gitformat-index.txt
 
-const readIndex = () => {
+const readIndex = (): GitIndex => {
   const indexPath = absolutePath('index')
   if (!fs.existsSync(indexPath)) {
-    return []
+    return {
+      version: 2,
+      size: 0,
+      entries: [],
+    }
   }
 
   const binary = fs.readFileSync(indexPath, 'binary')
@@ -80,22 +84,26 @@ const readIndex = () => {
     })
   }
 
-  return entries
+  return {
+    version: version,
+    size: contentLength,
+    entries: entries,
+  }
 }
 
 const writeIndex = () => {
-  const entries = readIndex()
+  const index = readIndex()
 
   const header = Buffer.alloc(12)
   header.write('DIRC', 0)
   header.writeUintBE(2, 4, 4)
-  header.writeUintBE(entries.length, 8, 4)
+  header.writeUintBE(index.size, 8, 4)
 
-  const length = Buffer.byteLength(JSON.stringify(entries[0]), 'binary') * entries.length
+  const length = Buffer.byteLength(JSON.stringify(index.entries[0]), 'binary') * index.size
   const content = Buffer.alloc(length)
 
   let offset = 0
-  for (const entry of entries) {
+  for (const entry of index.entries) {
     content.writeUintBE(entry.createdTime.getTime() / 1000, offset, 4)
     content.writeUintBE(0, offset + 4, 4) // we don't use it, write empty bytes
 
