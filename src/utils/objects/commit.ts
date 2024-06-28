@@ -2,6 +2,7 @@ import zlib from 'node:zlib'
 
 import { getObjectDetails, objectExist, writeObject } from '../filesystem'
 import { generateHash } from '../hash'
+import { getConfigValue } from '../config'
 
 const writeCommit = (tree: string, parent: string | null, message: string = 'Default commit message'): string => {
   if (!objectExist(tree)) {
@@ -12,8 +13,14 @@ const writeCommit = (tree: string, parent: string | null, message: string = 'Def
     throw new Error(`Parent does not exist: ${tree}`)
   }
 
-  // TODO: read from config
-  const author = `User user@example.com ${Math.floor(Date.now() / 1000)} +0000`
+  const name = getConfigValue('user.name')
+  const email = getConfigValue('user.email')
+
+  if (!name || !email) {
+    throw new Error('User name and email are not set. Please set them in the config file.')
+  }
+
+  const author = `${name} ${email} ${Math.floor(Date.now() / 1000)} +0000`
   const commiter = author
 
   let content = `tree ${tree}\nauthor ${author}\ncommiter ${commiter}\n\n${message}\n`

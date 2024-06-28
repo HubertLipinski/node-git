@@ -16,6 +16,7 @@ import branch from './commands/branch'
 import { repositoryHasChanges } from './utils/repository'
 import add from './commands/add'
 import commit from './commands/commit'
+import { getConfigValue, parseConfig } from './utils/config'
 
 const cmd = new Command()
   .name('node-git')
@@ -141,5 +142,7 @@ cmd
   .action((options) => {
     commit(options.message)
   })
+
+console.log(getConfigValue('user.name'))
 
 cmd.parse(process.argv)

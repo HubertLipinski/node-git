@@ -4,10 +4,17 @@ import { writeCommit } from '../utils/objects/commit'
 import { findObject, repositoryHasChanges } from '../utils/repository'
 import { getActiveBranch } from '../utils/branch'
 import { absolutePath } from '../utils/directory'
+import { indexHasEntries } from '../utils/gitIndex'
 
 export default (message: string | null) => {
   if (!message) {
     process.stdout.write('error: commit message is required\n')
+    return
+  }
+
+  if (!indexHasEntries()) {
+    process.stdout.write('No changes added to commit.\n')
+    process.stdout.write('Use node-git add to add changes to the index file.\n')
     return
   }
 
