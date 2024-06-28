@@ -3,7 +3,7 @@ import assert from 'node:assert'
 import path from 'path'
 import { EOL, homedir } from 'os'
 import { parse, stringify } from 'ini'
-import { absolutePath, configFile } from './directory'
+import { configFile } from './directory'
 
 const getIgnoredFiles = (): string[] => {
   const ignoreFileName: string = '.gitignore'

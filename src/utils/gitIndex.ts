@@ -145,8 +145,13 @@ const writeIndex = (gitIndex: GitIndex | null = null) => {
   fs.writeFileSync(absolutePath('index'), Buffer.concat([header, content]))
 }
 
+const indexHasEntries = (): boolean => {
+  const index = readIndex()
+  return index.size > 0
+}
+
 const parseDate = (time: Buffer): Date => {
   return new Date(parseInt(time.toString('hex'), 16) * 1000)
 }
 
-export { readIndex, writeIndex }
+export { readIndex, writeIndex, indexHasEntries }
