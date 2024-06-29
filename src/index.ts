@@ -13,10 +13,9 @@ import showRef from './commands/show-ref'
 import revParse from './commands/rev-parse'
 import lsFiles from './commands/ls-files'
 import branch from './commands/branch'
-import { repositoryHasChanges } from './utils/repository'
 import add from './commands/add'
 import commit from './commands/commit'
-import { getConfigValue, parseConfig } from './utils/config'
+import { getConfigValue } from './utils/config'
 
 const cmd = new Command()
   .name('node-git')
