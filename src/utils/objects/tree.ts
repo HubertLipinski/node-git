@@ -1,4 +1,6 @@
-import { readIndex } from '../gitIndex'
+import path from 'path'
+import { getObjectDetails } from '../filesystem'
+import fs from 'node:fs'
 
 const readTreeEntries = (buffer: Buffer): TreeEntry[] => {
   const entries: TreeEntry[] = []
@@ -29,11 +31,18 @@ const formatTreeEntries = (entries: TreeEntry[]): string => {
   return entries.map((entry) => `${entry.mode} ${entry.type} ${entry.hash}    ${entry.filename}`).join('\n')
 }
 
-const treeFromIndex = () => {
-  const index = readIndex()
+const treeCheckout = (entries: TreeEntry[], dist: string): void => {
+  for (const item of entries) {
+    const target = path.join(dist, item.filename)
+    const obj = getObjectDetails(item.hash)
 
-  for (const entry of index.entries) {
-    console.log(entry)
+    if (item.type === ObjectType.Tree) {
+      if (!fs.existsSync(target)) fs.mkdirSync(target)
+      const subTree = getObjectDetails(item.hash)
+      treeCheckout(readTreeEntries(subTree.content), `${dist}/${item.filename}`)
+    } else if (item.type === ObjectType.Blob) {
+      fs.writeFileSync(target, obj.content, { encoding: 'utf-8' })
+    }
   }
 }
 
@@ -52,4 +61,4 @@ const _fileMode = (value: string): FileType => {
   }
 }
 
-export { readTreeEntries, formatTreeEntries, treeFromIndex }
+export { readTreeEntries, formatTreeEntries, treeCheckout }

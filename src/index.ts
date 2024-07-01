@@ -1,7 +1,6 @@
 #! /usr/bin/env node
 
 import { Argument, Command, Option } from 'commander'
-
 import init from './commands/init'
 import catFile from './commands/cat-file'
 import hashObject from './commands/hash-object'
@@ -15,7 +14,7 @@ import lsFiles from './commands/ls-files'
 import branch from './commands/branch'
 import add from './commands/add'
 import commit from './commands/commit'
-import { getConfigValue } from './utils/config'
+import checkout from './commands/checkout'
 
 const cmd = new Command()
   .name('node-git')
@@ -115,8 +114,19 @@ cmd
 cmd
   .command('checkout')
   .description('Switch branches or restore working tree files')
-  .action(() => {
-    console.log('checkout')
+  .argument('<branch-name>', 'Name of the branch')
+  .addArgument(
+    new Argument('[directory]', 'Empty directory to write files to').default(`checkout_${Date.now().toString()}`), // TODO: use a better default
+  )
+  .addOption(
+    new Option(
+      '--commit <commit>',
+      'Restore working tree files from the given commit. This will detach HEAD from the current branch.',
+    ),
+  )
+  .usage('<branch-name> [--commit <commit>] [directory]')
+  .action((name, directory, options) => {
+    checkout(name, directory, options)
   })
 
 cmd
@@ -141,7 +151,5 @@ cmd
   .action((options) => {
     commit(options.message)
   })
-
-console.log(getConfigValue('user.name'))
 
 cmd.parse(process.argv)

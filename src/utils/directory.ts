@@ -1,4 +1,5 @@
 import path from 'path'
+import fs from 'node:fs'
 
 const rootDirectory: string = process.cwd()
 
@@ -11,10 +12,26 @@ const absolutePath = (...args: string[]): string => {
   return path.join(repositoryDirectory, ...args)
 }
 
-const workingDrectory = (filePath = ''): string => {
+const workingDirectory = (filePath = ''): string => {
   return path.join(rootDirectory, filePath)
+}
+
+const createSafeDirectory = (directory: string, forceCrete: boolean = false): void => {
+  if (!forceCrete && fs.existsSync(directory)) {
+    throw new Error(`Directory '${directory}' already exists!`)
+  }
+
+  fs.mkdirSync(directory)
 }
 
 const configFile = path.join(repositoryDirectory, 'config')
 
-export { rootFolder, rootDirectory, repositoryDirectory, absolutePath, workingDrectory, configFile }
+export {
+  rootFolder,
+  rootDirectory,
+  repositoryDirectory,
+  absolutePath,
+  workingDirectory,
+  createSafeDirectory,
+  configFile,
+}
