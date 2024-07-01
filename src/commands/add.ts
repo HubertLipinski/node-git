@@ -1,18 +1,18 @@
 import fs from 'node:fs'
-import { workingDrectory } from '../utils/directory'
+import { workingDirectory } from '../utils/directory'
 import { getIgnoredFiles } from '../utils/config'
 import path from 'path'
 import { writeBlobObject } from '../utils/objects/blob'
 import { writeIndex } from '../utils/gitIndex'
 
 export default (dir: string = '.') => {
-  const directory = workingDrectory(dir)
+  const directory = workingDirectory(dir)
 
   const ignoredFiles = getIgnoredFiles()
   const content = fs.readdirSync(directory, { recursive: true, withFileTypes: true })
 
   const files = content.filter((file) => {
-    const rootDir = path.relative(workingDrectory(), file.path).split(path.sep).shift()!
+    const rootDir = path.relative(workingDirectory(), file.path).split(path.sep).shift()!
     return !ignoredFiles.includes(rootDir) && !file.isDirectory()
   })
 
