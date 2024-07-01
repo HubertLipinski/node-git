@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import { findObject, resolveReference } from '../utils/repository'
-import { getObjectDetails, objectExist } from '../utils/filesystem'
+import { getObjectDetails } from '../utils/filesystem'
 import { readTreeEntries, treeCheckout } from '../utils/objects/tree'
 import { absolutePath, createSafeDirectory, workingDirectory } from '../utils/directory'
 import { localRef, refExists } from '../utils/ref'
