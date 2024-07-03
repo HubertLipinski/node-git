@@ -65,7 +65,6 @@ cmd
   .addOption(new Option('-m, --message <string>', 'Commit message').makeOptionMandatory())
   .usage('<tree> [-pm]')
   .action((tree, options) => {
-    console.log(tree, options)
     process.stdout.write(commitTree(tree, options))
   })
 
