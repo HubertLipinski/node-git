@@ -1,6 +1,9 @@
 import fs from 'node:fs'
 import assert from 'node:assert'
 import { absolutePath } from './directory'
+import { globSync, Path } from 'glob'
+import { getIgnoredFilePaths } from './ignoredFiles'
+import { GlobOptions } from 'glob/dist/commonjs/glob'
 
 // https://github.com/git/git/blob/master/Documentation/gitformat-index.txt
 
@@ -154,4 +157,12 @@ const parseDate = (time: Buffer): Date => {
   return new Date(parseInt(time.toString('hex'), 16) * 1000)
 }
 
-export { readIndex, writeIndex, indexHasEntries }
+const getTrackedPaths = (path: string = '**', options: GlobOptions = {}): Path[] | string[] => {
+  return globSync(path, {
+    ignore: getIgnoredFilePaths(),
+    dot: true,
+    ...options,
+  })
+}
+
+export { readIndex, writeIndex, indexHasEntries, getTrackedPaths }

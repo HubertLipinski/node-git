@@ -15,6 +15,7 @@ import branch from './commands/branch'
 import add from './commands/add'
 import commit from './commands/commit'
 import checkout from './commands/checkout'
+import showIgnore from './commands/show-ignore'
 
 const cmd = new Command()
   .name('node-git')
@@ -53,8 +54,10 @@ cmd
 cmd
   .command('write-tree')
   .description('Create a tree object from the current index.')
-  .action(() => {
-    process.stdout.write(writeTree())
+  .argument('[path]', 'Root of the tree. Relative to the working directory.')
+  .usage('[path]')
+  .action((path) => {
+    process.stdout.write(writeTree(path))
   })
 
 cmd
@@ -149,6 +152,13 @@ cmd
   .addOption(new Option('-m, --message <message>', 'Commit message').default(null))
   .action((options) => {
     commit(options.message)
+  })
+
+cmd
+  .command('show-ignore')
+  .description('Show all ignored paths. Reads all .gitignore files in the repository.')
+  .action(() => {
+    showIgnore()
   })
 
 cmd.parse(process.argv)

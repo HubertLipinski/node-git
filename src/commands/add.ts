@@ -1,24 +1,16 @@
 import fs from 'node:fs'
 import { workingDirectory } from '../utils/directory'
-import { getIgnoredFiles } from '../utils/config'
-import path from 'path'
 import { writeBlobObject } from '../utils/objects/blob'
-import { writeIndex } from '../utils/gitIndex'
+import { getTrackedPaths, writeIndex } from '../utils/gitIndex'
 
 export default (dir: string = '.') => {
   const directory = workingDirectory(dir)
 
-  const ignoredFiles = getIgnoredFiles()
-  const content = fs.readdirSync(directory, { recursive: true, withFileTypes: true })
-
-  const files = content.filter((file) => {
-    const rootDir = path.relative(workingDirectory(), file.path).split(path.sep).shift()!
-    return !ignoredFiles.includes(rootDir) && !file.isDirectory()
-  })
+  const trackedFiles = getTrackedPaths('**', { nodir: true, cwd: directory }) as string[]
 
   const entries: IndexEntry[] = []
-  for (const file of files) {
-    const filePath = path.join(path.resolve(file.path), file.name)
+  for (const file of trackedFiles) {
+    const filePath = workingDirectory(file)
     const details = fs.statSync(filePath)
 
     const hash = writeBlobObject(filePath)
@@ -33,7 +25,7 @@ export default (dir: string = '.') => {
       gid: details.gid.toString(16),
       size: details.size,
       hash: hash,
-      fileName: file.name,
+      fileName: file.replaceAll('\\', '/'), // windows fix
     })
   }
 
