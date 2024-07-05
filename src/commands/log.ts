@@ -1,14 +1,31 @@
 import { parseCommit } from '../utils/objects/commit'
+import { findObject, repositoryHasChanges } from '../utils/repository'
 
 export default (hash: string | null) => {
-  if (!hash) {
-    //
-    throw new Error('Not implemented, provide hash')
+  if (!repositoryHasChanges()) return null
+
+  process.stdout.write(`\n`)
+  const commit = findObject(hash ?? 'HEAD') as string
+  const details = parseCommit(commit)
+  displayDetails(commit, details)
+
+  if (details.parent === null) {
+    return
   }
 
-  const short = hash.slice(0, 7)
-  const commit = parseCommit(hash)
-  commit.message = commit.message.split('\n')[0] // display only first line
+  let parent = findObject(details.parent) as string
+  let parentDetails = parseCommit(parent)
 
-  return parseCommit(hash) // TODO: display format
+  while (parentDetails.parent !== null) {
+    displayDetails(parent, parentDetails)
+    parent = findObject(parentDetails.parent) as string
+    parentDetails = parseCommit(parent)
+  }
+}
+
+const displayDetails = (sha: string, details: Commit): void => {
+  process.stdout.write(`commit ${sha}\n`)
+  process.stdout.write(`Author ${details.author.name} <${details.author.email}>\n`)
+  process.stdout.write(`Date: ${new Date(parseInt(details.author.date) * 1000).toLocaleString('pl')}\n\n`)
+  process.stdout.write(`\t${details.message}\n`)
 }

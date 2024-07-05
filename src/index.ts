@@ -74,10 +74,10 @@ cmd
 cmd
   .command('log')
   .description('Show commit logs')
-  .argument('<commit>', 'Commit to start at.')
+  .addArgument(new Argument('[commit]', 'Commit to start at.').default(null).argOptional())
   .usage('<commit>')
   .action((commit) => {
-    console.log(log(commit))
+    log(commit)
   })
 
 cmd

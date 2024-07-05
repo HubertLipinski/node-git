@@ -14,6 +14,9 @@ const repositoryHasChanges = (): boolean => {
    */
 
   const hasIndex = fs.existsSync(absolutePath('index'))
+
+  if (!hasIndex) return false
+
   const hasMasterRef = refExists(getActiveBranch() ?? 'master')
 
   return hasIndex && hasMasterRef

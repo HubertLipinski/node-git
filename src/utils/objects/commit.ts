@@ -20,7 +20,7 @@ const writeCommit = (tree: string, parent: string | null, message: string = 'Def
     throw new Error('User name and email are not set. Please set them in the config file.')
   }
 
-  const author = `${name} ${email} ${Math.floor(Date.now() / 1000)} +0000`
+  const author = `${name} ${email} ${Math.floor(Date.now() / 1000)}`
   const commiter = author
 
   let content = `tree ${tree}\nauthor ${author}\ncommiter ${commiter}\n\n${message}\n`
@@ -51,13 +51,24 @@ const parseCommit = (hash: string): Commit => {
   content.split('\n').map((line) => {
     const [key, ...value] = line.split(' ')
 
+    let author = value[0]
+    let email = value[1]
+    let date = `${value[2]} ${value[3] ?? ''}`
+
+    // name consists of two words
+    if (value.length > 3) {
+      author = `${value[0]} ${value[1]}`
+      email = `${value[2]}`
+      date = `${value[3]} ${value[4] ?? ''}`
+    }
+
     switch (key) {
       case 'author':
       case 'commiter':
         result[key] = {
-          name: value[0],
-          email: value[1],
-          date: `${value[2]} ${value[3]}`,
+          name: author.trim(),
+          email: email.trim(),
+          date: date.trim(),
         }
         break
       case 'tree':
