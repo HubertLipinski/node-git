@@ -18,7 +18,7 @@ const workingDirectory = (filePath = ''): string => {
 
 const createSafeDirectory = (directory: string, forceCrete: boolean = false): void => {
   if (!forceCrete && fs.existsSync(directory)) {
-    throw new Error(`Directory '${directory}' already exists!`)
+    return
   }
 
   fs.mkdirSync(directory)

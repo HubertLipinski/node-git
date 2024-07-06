@@ -117,9 +117,7 @@ cmd
   .command('checkout')
   .description('Switch branches or restore working tree files')
   .argument('<branch-name>', 'Name of the branch')
-  .addArgument(
-    new Argument('[directory]', 'Empty directory to write files to').default(`checkout_${Date.now().toString()}`), // TODO: use a better default
-  )
+  .addArgument(new Argument('[directory]', 'Empty directory to write files to').default('.'))
   .addOption(
     new Option(
       '--commit <commit>',
