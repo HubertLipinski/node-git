@@ -4,7 +4,15 @@ import path from 'path'
 import { workingDirectory } from './directory'
 
 const getIgnoredFiles = (): IgnoredEntry[] => {
-  const ignoredFiles: IgnoredEntry[] = []
+  const ignoredFiles: IgnoredEntry[] = [
+    {
+      path: workingDirectory(),
+      rules: [
+        { rule: '.git/**', ignored: true },
+        { rule: '.nodegit/**', ignored: true },
+      ],
+    },
+  ]
 
   const files = fs
     .readdirSync(workingDirectory(), { recursive: true, withFileTypes: true })
@@ -47,18 +55,6 @@ const _parseIgnoreFile = (filePath: string): IgnoreRule[] => {
     if (result) {
       ignored.push(result)
     }
-  }
-
-  // ignore .git and .nodegit folders
-  if (filePath === workingDirectory('.gitignore')) {
-    ignored.push({
-      rule: '.git/**',
-      ignored: true,
-    })
-    ignored.push({
-      rule: '.nodegit/**',
-      ignored: true,
-    })
   }
 
   return ignored
