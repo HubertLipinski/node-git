@@ -97,7 +97,7 @@ cmd
 
 cmd
   .command('status')
-  .description('Status of the working tree and the index')
+  .description('Show status of the working tree and the index')
   .action(() => {
     status()
   })
