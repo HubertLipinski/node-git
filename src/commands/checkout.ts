@@ -5,6 +5,7 @@ import { readTreeEntries, treeCheckout } from '../utils/objects/tree'
 import { absolutePath, createSafeDirectory, workingDirectory } from '../utils/directory'
 import { localRef, refExists } from '../utils/ref'
 import { parseCommit } from '../utils/objects/commit'
+import branchCommand from './branch'
 
 export default (branch: string, directory: string, options: CommandOptions): void => {
   if (options.commit) {
@@ -20,6 +21,11 @@ export default (branch: string, directory: string, options: CommandOptions): voi
     process.stdout.write(`HEAD detached at ${sha}`)
 
     return
+  }
+
+  if (options.branch) {
+    branchCommand(branch)
+    process.stdout.write('\n')
   }
 
   if (!refExists(branch)) {

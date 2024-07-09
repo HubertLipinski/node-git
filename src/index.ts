@@ -118,6 +118,7 @@ cmd
   .description('Switch branches or restore working tree files')
   .argument('<branch-name>', 'Name of the branch')
   .addArgument(new Argument('[directory]', 'Empty directory to write files to').default('.'))
+  .addOption(new Option('-b --branch', 'Create a new branch named <branch-name>'))
   .addOption(
     new Option(
       '--commit <commit>',
