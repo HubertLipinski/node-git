@@ -24,6 +24,15 @@ const createSafeDirectory = (directory: string, forceCrete: boolean = false): vo
   fs.mkdirSync(directory)
 }
 
+const cleanFsPath = (path: string): string => {
+  return path.replaceAll('\\', '/')
+}
+
+const pathJoin = (base: string, dist: string, removeWindowsSlashes: boolean = true): string => {
+  const joined = path.join(base, dist)
+  return removeWindowsSlashes ? cleanFsPath(joined) : joined
+}
+
 const configFile = path.join(repositoryDirectory, 'config')
 
 export {
@@ -33,5 +42,7 @@ export {
   absolutePath,
   workingDirectory,
   createSafeDirectory,
+  cleanFsPath,
+  pathJoin,
   configFile,
 }

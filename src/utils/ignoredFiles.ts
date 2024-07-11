@@ -1,14 +1,16 @@
 import fs from 'node:fs'
 import { EOL } from 'os'
 import path from 'path'
-import { workingDirectory } from './directory'
+import { cleanFsPath, workingDirectory } from './directory'
 
 const getIgnoredFiles = (): IgnoredEntry[] => {
   const ignoredFiles: IgnoredEntry[] = [
     {
-      path: workingDirectory(),
+      path: '',
       rules: [
+        { rule: '.git', ignored: true },
         { rule: '.git/**', ignored: true },
+        { rule: '.nodegit', ignored: true },
         { rule: '.nodegit/**', ignored: true },
       ],
     },
@@ -31,12 +33,17 @@ const getIgnoredFiles = (): IgnoredEntry[] => {
   return ignoredFiles
 }
 
-const getIgnoredFilePaths = (): string[] => {
+const getIgnoredFilePaths = (relative: boolean = false): string[] => {
   const ignoredPaths: string[] = []
 
   for (const entry of getIgnoredFiles()) {
     entry.rules.forEach((rule: IgnoreRule) => {
-      ignoredPaths.push(path.join(entry.path, rule.rule).replaceAll(/\\/g, '/'))
+      let item = path.join(entry.path, rule.rule)
+      if (relative) {
+        item = workingDirectory(item)
+      }
+      item = cleanFsPath(item)
+      ignoredPaths.push(item)
     })
   }
 

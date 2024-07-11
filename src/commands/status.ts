@@ -1,8 +1,9 @@
 import { getActiveBranch } from '../utils/branch'
 import { readIndex } from '../utils/gitIndex'
-import { findObject, repositoryHasChanges, resolveReference } from '../utils/repository'
+import { findObject, repositoryHasChanges } from '../utils/repository'
 import { getObjectDetails } from '../utils/filesystem'
 import { readTreeEntries } from '../utils/objects/tree'
+import { pathJoin, cleanFsPath } from '../utils/directory'
 
 export default () => {
   if (!repositoryHasChanges()) {
@@ -18,26 +19,61 @@ export default () => {
     process.stdout.write(`On branch ${branch}\n\n`)
   }
 
-  // changes to be committed
+  // changes between HEAD and index
   process.stdout.write('Changes to be committed:\n\n')
   const index = readIndex()
   const headTreeSha = findObject('HEAD', ObjectType.Tree)
   const headDetails = getObjectDetails(headTreeSha!)
   const tree = readTreeEntries(headDetails.content)
 
-  process.stdout.write(`Tracked files: ${index.entries.length}\n`)
-  for (const item of index.entries) {
-    const headItem = tree.find((x) => x.filename === item.fileName)
+  const treeFromIndex = parseTreeFromIndex(tree, '.')
 
-    if (!headItem) {
-      process.stdout.write(`  new file:   ${item.fileName}\n`)
-    } else if (headItem.hash !== item.hash) {
-      process.stdout.write(`  modified:   ${item.fileName}\n`)
+  const indexEntriesMap = index.entries.reduce((acc: { [key: string]: string }, entry: IndexEntry) => {
+    acc[entry.hash] = entry.fileName
+    return acc
+  }, {})
+
+  const headTreeEntriesMap = treeFromIndex.reduce((acc: { [key: string]: string }, entry: IndexTreeEntry) => {
+    acc[entry.path] = entry.sha
+    return acc
+  }, {})
+
+  for (const [key, value] of Object.entries(indexEntriesMap)) {
+    if (headTreeEntriesMap[value]) {
+      if (headTreeEntriesMap[value] !== key) {
+        process.stdout.write(`  \x1b[32mmodified: ${value}\x1b[0m\n`)
+      }
+      delete headTreeEntriesMap[value]
+    } else {
+      process.stdout.write(`  \x1b[32mnew file: ${value}\x1b[0m\n`)
     }
   }
 
-  // TODO: compare index with head
+  for (const key of Object.keys(headTreeEntriesMap)) {
+    process.stdout.write(`  \x1b[31mdeleted: ${key}\x1b[0m\n`)
+  }
 
-  // changes not staged for commit
-  // TODO: implement
+  // TODO: changes between index and working directory
+
+  process.stdout.write('\nChanges not staged for commit:\n\n')
+}
+
+const parseTreeFromIndex = (entries: TreeEntry[], dist: string, data: IndexTreeEntry[] = []): IndexTreeEntry[] => {
+  dist = cleanFsPath(dist)
+
+  for (const item of entries) {
+    const treeEntry: IndexTreeEntry = {
+      path: pathJoin(dist, item.filename),
+      sha: item.hash,
+    }
+
+    if (item.type === ObjectType.Tree) {
+      const subTree = getObjectDetails(item.hash)
+      data.push(...parseTreeFromIndex(readTreeEntries(subTree.content), `${dist}/${item.filename}`))
+    } else {
+      data.push(treeEntry)
+    }
+  }
+
+  return data
 }

@@ -1,20 +1,26 @@
 import fs from 'node:fs'
 import zlib from 'node:zlib'
-
+import { Path } from 'glob'
+import path from 'path'
 import { generateHash } from '../utils/hash'
 import { getObjectPath } from '../utils/filesystem'
 import { writeBlobObject } from '../utils/objects/blob'
 import { getTrackedPaths } from '../utils/gitIndex'
-import { workingDirectory } from '../utils/directory'
-import { Path } from 'glob'
+import { cleanFsPath, workingDirectory } from '../utils/directory'
 
 export default function writeTree(directory: string = '.'): string {
-  const trackedFiles = getTrackedPaths('*', {
-    root: '',
-    cwd: workingDirectory(directory),
-    stat: true,
-    withFileTypes: true,
-  }) as Path[]
+  directory = cleanFsPath(workingDirectory(directory))
+
+  const trackedFiles = getTrackedPaths(
+    '*',
+    {
+      root: '',
+      cwd: directory,
+      stat: true,
+      withFileTypes: true,
+    },
+    true,
+  ) as Path[]
 
   const entries: TreeEntry[] = []
   for (const file of trackedFiles) {
@@ -22,7 +28,7 @@ export default function writeTree(directory: string = '.'): string {
       entries.push({
         mode: '040000',
         filename: file.name,
-        hash: writeTree(file.relative()),
+        hash: writeTree(path.relative(workingDirectory(), file.fullpath())),
       })
     } else {
       entries.push({

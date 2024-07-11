@@ -157,9 +157,13 @@ const parseDate = (time: Buffer): Date => {
   return new Date(parseInt(time.toString('hex'), 16) * 1000)
 }
 
-const getTrackedPaths = (path: string = '**', options: GlobOptions = {}): Path[] | string[] => {
+const getTrackedPaths = (
+  path: string = '**',
+  options: GlobOptions = {},
+  relative: boolean = false,
+): Path[] | string[] => {
   return globSync(path, {
-    ignore: getIgnoredFilePaths(),
+    ignore: getIgnoredFilePaths(relative),
     dot: true,
     ...options,
   })

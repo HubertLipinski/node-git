@@ -22,3 +22,8 @@ interface GitIndex {
   size: number
   entries: IndexEntry[] | []
 }
+
+interface IndexTreeEntry {
+  path: string
+  sha: string
+}
