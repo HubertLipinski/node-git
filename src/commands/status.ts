@@ -4,6 +4,7 @@ import { findObject, repositoryHasChanges } from '../utils/repository'
 import { getObjectDetails } from '../utils/filesystem'
 import { readTreeEntries } from '../utils/objects/tree'
 import { pathJoin, cleanFsPath } from '../utils/directory'
+import { colorText } from '../utils/color'
 
 export default () => {
   if (!repositoryHasChanges()) {
@@ -41,16 +42,16 @@ export default () => {
   for (const [key, value] of Object.entries(indexEntriesMap)) {
     if (headTreeEntriesMap[value]) {
       if (headTreeEntriesMap[value] !== key) {
-        process.stdout.write(`  \x1b[32mmodified: ${value}\x1b[0m\n`)
+        process.stdout.write(colorText(`\tmodified: ${value}\n`, Color.GREEN))
       }
       delete headTreeEntriesMap[value]
     } else {
-      process.stdout.write(`  \x1b[32mnew file: ${value}\x1b[0m\n`)
+      process.stdout.write(colorText(`\tnew file: ${value}\n`, Color.GREEN))
     }
   }
 
   for (const key of Object.keys(headTreeEntriesMap)) {
-    process.stdout.write(`  \x1b[31mdeleted: ${key}\x1b[0m\n`)
+    process.stdout.write(colorText(`\tdeleted: ${key}\n`, Color.RED))
   }
 
   // TODO: changes between index and working directory

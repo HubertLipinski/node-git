@@ -1,5 +1,6 @@
 import { parseCommit } from '../utils/objects/commit'
 import { findObject, repositoryHasChanges } from '../utils/repository'
+import { colorText } from '../utils/color'
 
 export default async (hash: string | null) => {
   if (!repositoryHasChanges()) return null
@@ -31,7 +32,7 @@ export default async (hash: string | null) => {
 }
 
 const displayDetails = (sha: string, details: Commit): void => {
-  process.stdout.write(`\x1b[33mcommit ${sha}\x1b[0m\n`)
+  process.stdout.write(colorText(`commit ${sha}\n`, Color.YELLOW))
   process.stdout.write(`Author ${details.author.name} <${details.author.email}>\n`)
   process.stdout.write(`Date: ${new Date(parseInt(details.author.date) * 1000).toLocaleString('pl')}\n\n`)
   process.stdout.write(`\t${details.message}\n`)
