@@ -4,6 +4,7 @@ import { absolutePath } from './directory'
 import { globSync, Path } from 'glob'
 import { getIgnoredFilePaths } from './ignoredFiles'
 import { GlobOptions } from 'glob/dist/commonjs/glob'
+import { parseDateHex } from './dates'
 
 // https://github.com/git/git/blob/master/Documentation/gitformat-index.txt
 
@@ -67,8 +68,8 @@ const readIndex = (): GitIndex => {
     index = 8 * Math.ceil(index / 8)
 
     entries.push({
-      createdTime: parseDate(ctime),
-      modifiedTime: parseDate(mtime),
+      createdTime: parseDateHex(ctime),
+      modifiedTime: parseDateHex(mtime),
       dev: dev.toString('hex'),
       ino: ino.toString('hex'),
       mode: mode.toString('hex'),
@@ -111,10 +112,10 @@ const writeIndex = (gitIndex: GitIndex | null = null) => {
 
   let offset = 0
   for (const entry of index.entries) {
-    content.writeUintBE(parseInt((new Date(entry.createdTime).getTime() / 1000).toFixed(0)), offset, 4)
+    content.writeUintBE(parseInt((entry.createdTime.getTime() / 1000).toFixed(0)), offset, 4)
     content.writeUintBE(0, offset + 4, 4) // we don't use it, write empty bytes
 
-    content.writeUintBE(parseInt((new Date(entry.modifiedTime).getTime() / 1000).toFixed(0)), offset + 8, 4)
+    content.writeUintBE(parseInt((entry.modifiedTime.getTime() / 1000).toFixed(0)), offset + 8, 4)
     content.writeUintBE(0, offset + 12, 4) // we don't use it, write empty bytes
 
     content.writeUintBE(parseInt(entry.dev, 16), offset + 16, 4)
@@ -151,10 +152,6 @@ const writeIndex = (gitIndex: GitIndex | null = null) => {
 const indexHasEntries = (): boolean => {
   const index = readIndex()
   return index.size > 0
-}
-
-const parseDate = (time: Buffer): Date => {
-  return new Date(parseInt(time.toString('hex'), 16) * 1000)
 }
 
 const getTrackedPaths = (

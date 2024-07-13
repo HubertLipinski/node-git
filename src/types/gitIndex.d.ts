@@ -1,12 +1,16 @@
-interface IndexEntry {
+interface FileDetails {
   createdTime: Date
   modifiedTime: Date
+  fileName: string
+  size: number
+}
+
+interface IndexEntry extends FileDetails {
   dev: string
   ino: string
   mode: string
   uid: string
   gid: string
-  size: number
   hash: string
   flags?: {
     binary: string
@@ -14,7 +18,6 @@ interface IndexEntry {
     extended: string
     stage: string
   }
-  fileName: string
 }
 
 interface GitIndex {
