@@ -3,19 +3,27 @@ import { getActiveBranch } from '../utils/branch'
 import { getTrackedPaths, readIndex } from '../utils/gitIndex'
 import { findObject, repositoryHasChanges } from '../utils/repository'
 import { getObjectDetails } from '../utils/filesystem'
-import { readTreeEntries } from '../utils/objects/tree'
-import { pathJoin, cleanFsPath, workingDirectory } from '../utils/directory'
+import { parseTreeFromIndex, readTreeEntries } from '../utils/objects/tree'
+import { cleanFsPath, workingDirectory } from '../utils/directory'
 import { colorText } from '../utils/color'
 import { parseFsDate } from '../utils/dates'
 import { writeBlobObject } from '../utils/objects/blob'
 
-// TODO: refactor each stages to return the data instead of writing to stdout
 export default () => {
   if (!repositoryHasChanges()) {
     process.exit(0)
   }
 
-  // display the current branch
+  const index = readIndex()
+
+  displayCurrentBranch()
+
+  indexDiff(index)
+
+  workingDirectoryDiff(index)
+}
+
+const displayCurrentBranch = (): void => {
   const branch = getActiveBranch()
 
   if (!branch) {
@@ -23,10 +31,10 @@ export default () => {
   } else {
     process.stdout.write(`On branch ${branch}\n\n`)
   }
+}
 
-  // display changes between HEAD and index
+const indexDiff = (index: GitIndex): void => {
   process.stdout.write('Changes to be committed:\n')
-  const index = readIndex()
   const headTreeSha = findObject('HEAD', ObjectType.Tree)
   const headDetails = getObjectDetails(headTreeSha!)
   const tree = readTreeEntries(headDetails.content)
@@ -43,22 +51,23 @@ export default () => {
     return acc
   }, {})
 
-  for (const [key, value] of Object.entries(indexEntriesMap)) {
-    if (headTreeEntriesMap[value]) {
-      if (headTreeEntriesMap[value] !== key) {
-        process.stdout.write(colorText(`\tmodified: ${value}\n`, Color.GREEN))
+  for (const [hash, fileName] of Object.entries(indexEntriesMap)) {
+    if (headTreeEntriesMap[fileName]) {
+      if (headTreeEntriesMap[fileName] !== hash) {
+        process.stdout.write(colorText(`\tmodified: ${fileName}\n`, Color.GREEN))
       }
-      delete headTreeEntriesMap[value]
+      delete headTreeEntriesMap[fileName]
     } else {
-      process.stdout.write(colorText(`\tnew file: ${value}\n`, Color.GREEN))
+      process.stdout.write(colorText(`\tnew file: ${fileName}\n`, Color.GREEN))
     }
   }
 
   for (const key of Object.keys(headTreeEntriesMap)) {
     process.stdout.write(colorText(`\tdeleted: ${key}\n`, Color.RED))
   }
+}
 
-  // display changes between index and working directory
+const workingDirectoryDiff = (index: GitIndex): void => {
   process.stdout.write('\nChanges not staged for commit:\n')
 
   const trackedFiles = getTrackedPaths(
@@ -96,14 +105,13 @@ export default () => {
 
     const modified = parseFsDate(systemFile.modifiedTime) !== entry.modifiedTime
 
-    // if the file is not modified, we don't need to check the content
     if (!modified) {
       systemFiles.delete(filePath)
       continue
     }
 
     // check if the file content has changed
-    const newHash = writeBlobObject(workingDirectory(filePath))
+    const newHash = writeBlobObject(workingDirectory(filePath), true)
     if (newHash !== entry.hash) {
       process.stdout.write(colorText(`\tmodified: ${filePath}\n`, Color.RED))
     }
@@ -116,24 +124,4 @@ export default () => {
   for (const file of systemFiles.keys()) {
     process.stdout.write(colorText(`\tnew file: ${file}\n`, Color.RED))
   }
-}
-
-const parseTreeFromIndex = (entries: TreeEntry[], dist: string, data: IndexTreeEntry[] = []): IndexTreeEntry[] => {
-  dist = cleanFsPath(dist)
-
-  for (const item of entries) {
-    const treeEntry: IndexTreeEntry = {
-      path: pathJoin(dist, item.filename),
-      sha: item.hash,
-    }
-
-    if (item.type === ObjectType.Tree) {
-      const subTree = getObjectDetails(item.hash)
-      data.push(...parseTreeFromIndex(readTreeEntries(subTree.content), `${dist}/${item.filename}`))
-    } else {
-      data.push(treeEntry)
-    }
-  }
-
-  return data
 }

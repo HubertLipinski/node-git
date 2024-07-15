@@ -1,6 +1,7 @@
 import path from 'path'
 import { getObjectDetails } from '../filesystem'
 import fs from 'node:fs'
+import { cleanFsPath, pathJoin } from '../directory'
 
 const readTreeEntries = (buffer: Buffer): TreeEntry[] => {
   const entries: TreeEntry[] = []
@@ -46,6 +47,26 @@ const treeCheckout = (entries: TreeEntry[], dist: string): void => {
   }
 }
 
+const parseTreeFromIndex = (entries: TreeEntry[], dist: string, data: IndexTreeEntry[] = []): IndexTreeEntry[] => {
+  dist = cleanFsPath(dist)
+
+  for (const item of entries) {
+    const treeEntry: IndexTreeEntry = {
+      path: pathJoin(dist, item.filename),
+      sha: item.hash,
+    }
+
+    if (item.type === ObjectType.Tree) {
+      const subTree = getObjectDetails(item.hash)
+      data.push(...parseTreeFromIndex(readTreeEntries(subTree.content), `${dist}/${item.filename}`))
+    } else {
+      data.push(treeEntry)
+    }
+  }
+
+  return data
+}
+
 const _fileMode = (value: string): FileType => {
   switch (value) {
     case '040000':
@@ -61,4 +82,4 @@ const _fileMode = (value: string): FileType => {
   }
 }
 
-export { readTreeEntries, formatTreeEntries, treeCheckout }
+export { readTreeEntries, formatTreeEntries, treeCheckout, parseTreeFromIndex }

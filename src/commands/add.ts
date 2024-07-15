@@ -1,5 +1,5 @@
 import fs from 'node:fs'
-import { workingDirectory } from '../utils/directory'
+import { cleanFsPath, workingDirectory } from '../utils/directory'
 import { writeBlobObject } from '../utils/objects/blob'
 import { getTrackedPaths, writeIndex } from '../utils/gitIndex'
 
@@ -25,7 +25,7 @@ export default (dir: string = '.') => {
       gid: details.gid.toString(16),
       size: details.size,
       hash: hash,
-      fileName: file.replaceAll('\\', '/'), // windows fix
+      fileName: cleanFsPath(file),
     })
   }
 

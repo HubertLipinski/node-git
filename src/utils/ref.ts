@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'path'
 
-import { absolutePath, repositoryDirectory } from './directory'
+import { absolutePath, cleanFsPath, repositoryDirectory } from './directory'
 import { resolveReference } from './repository'
 
 const refList = (filePath: string | null = null): Map<string, string> => {
@@ -27,7 +27,7 @@ const refList = (filePath: string | null = null): Map<string, string> => {
 
       // format ugly windows path
       if (path.sep === '\\') {
-        key = key.replace(/\\/g, '/')
+        key = cleanFsPath(key)
       }
 
       list.set(key, content!)
