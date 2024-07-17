@@ -2,11 +2,6 @@ import fs from 'node:fs'
 import zlib from 'node:zlib'
 import { absolutePath } from './directory'
 
-interface HashFileLocation {
-  directory: string
-  filename: string
-}
-
 const hashToPath = (hash: string): HashFileLocation => {
   return {
     directory: hash.slice(0, 2),

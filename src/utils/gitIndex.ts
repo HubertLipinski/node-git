@@ -107,6 +107,7 @@ const writeIndex = (gitIndex: GitIndex | null = null) => {
   header.writeUintBE(2, 4, 4)
   header.writeUintBE(index.size, 8, 4)
 
+  // TODO: optimize buffer length
   const length = Buffer.byteLength(JSON.stringify(index.entries[0]), 'binary') * index.size
   const content = Buffer.alloc(length)
 
