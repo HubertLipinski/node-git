@@ -1,6 +1,5 @@
 import fs from 'node:fs'
 import { stringify } from 'ini'
-
 import { repositoryDirectory, absolutePath, configFile } from '../utils/directory'
 
 export default (opts: CommandOptions): void => {
