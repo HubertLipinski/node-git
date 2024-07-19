@@ -12,7 +12,10 @@ const absolutePath = (...args: string[]): string => {
   return path.join(repositoryDirectory, ...args)
 }
 
-const workingDirectory = (filePath = ''): string => {
+const workingDirectory = (filePath: string | string[] = ''): string => {
+  if (Array.isArray(filePath)) {
+    filePath = filePath.join(path.sep)
+  }
   return path.join(rootDirectory, filePath)
 }
 

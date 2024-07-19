@@ -140,9 +140,10 @@ cmd
 
 cmd
   .command('add')
+  .addArgument(new Argument('[path]', 'Path to directory or a file').default(null))
   .description('Add file contents to the index')
-  .action(() => {
-    add()
+  .action((path) => {
+    add(path)
   })
 
 cmd

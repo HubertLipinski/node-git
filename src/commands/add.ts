@@ -1,33 +1,43 @@
-import fs from 'node:fs'
+import path from 'path'
+import { Path } from 'glob'
 import { cleanFsPath, workingDirectory } from '../utils/directory'
 import { writeBlobObject } from '../utils/objects/blob'
-import { getTrackedPaths, writeIndex } from '../utils/gitIndex'
+import { getTrackedPaths, indexNameToHash, readIndex, writeIndex } from '../utils/gitIndex'
 
 export default (dir: string = '.') => {
-  const directory = workingDirectory(dir)
+  const directory = path.relative(workingDirectory(), workingDirectory(['.', dir]))
 
-  const trackedFiles = getTrackedPaths('**', { nodir: true, cwd: directory }) as string[]
+  const trackedFiles = getTrackedPaths('**', { nodir: true, cwd: directory, stat: true, withFileTypes: true }) as Path[]
 
-  const entries: IndexEntry[] = []
+  const changed: IndexEntry[] = []
+  let entries: IndexEntry[] = readIndex().entries
+  const nameToHash = indexNameToHash()
+
   for (const file of trackedFiles) {
-    const filePath = workingDirectory(file)
-    const details = fs.statSync(filePath)
+    const filePath = cleanFsPath(path.relative(workingDirectory(), file.fullpath()))
+    const hash = writeBlobObject(file.fullpath())
 
-    const hash = writeBlobObject(filePath)
+    let item: IndexEntry | undefined = entries.find((entry) => entry.fileName === filePath)
+    const hasChanged = nameToHash.has(filePath) && nameToHash.get(filePath) !== hash
 
-    entries.push({
-      createdTime: details.birthtime,
-      modifiedTime: details.mtime,
-      dev: details.dev.toString(16),
-      ino: '00',
-      mode: '0a81',
-      uid: '00',
-      gid: details.gid.toString(16),
-      size: details.size,
-      hash: hash,
-      fileName: cleanFsPath(file),
-    })
+    if (!item || hasChanged) {
+      item = {
+        createdTime: file.birthtime as Date,
+        modifiedTime: file.mtime as Date,
+        dev: file?.dev?.toString(16) as string,
+        ino: file.ino?.toString(32) as string,
+        mode: file.mode?.toString(16) as string,
+        uid: file.uid?.toString(16) as string,
+        gid: file.gid?.toString(16) as string,
+        size: file.size as number,
+        hash: hash,
+        fileName: filePath,
+      }
+      changed.push(item)
+    }
   }
+
+  entries = entries.map((entry) => changed.find((item) => item.fileName === entry.fileName) || entry)
 
   writeIndex({
     version: 2,

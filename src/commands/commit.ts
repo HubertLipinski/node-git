@@ -18,7 +18,7 @@ export default (message: string | null) => {
     return
   }
 
-  const tree = writeTree() // todo: tree from index
+  const tree = writeTree()
   const commit = writeCommit(tree, repositoryHasChanges() ? findObject('HEAD') : null, message)
 
   const activeBranch = getActiveBranch()

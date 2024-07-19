@@ -155,6 +155,17 @@ const indexHasEntries = (): boolean => {
   return index.size > 0
 }
 
+const indexNameToHash = (): Map<string, string> => {
+  const index = readIndex()
+  const results = new Map<string, string>()
+
+  for (const entry of index.entries) {
+    results.set(entry.fileName, entry.hash)
+  }
+
+  return results
+}
+
 const getTrackedPaths = (
   path: string = '**',
   options: GlobOptions = {},
@@ -167,4 +178,4 @@ const getTrackedPaths = (
   })
 }
 
-export { readIndex, writeIndex, indexHasEntries, getTrackedPaths }
+export { readIndex, writeIndex, indexHasEntries, getTrackedPaths, indexNameToHash }
