@@ -11,7 +11,7 @@ export default (dir: string = '.') => {
 
   const changed: IndexEntry[] = []
   let entries: IndexEntry[] = readIndex().entries
-  const nameToHash = indexNameToHash()
+  const nameToHash: Map<string, string> = indexNameToHash()
 
   for (const file of trackedFiles) {
     const filePath = cleanFsPath(path.relative(workingDirectory(), file.fullpath()))

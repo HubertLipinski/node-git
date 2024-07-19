@@ -17,9 +17,7 @@ export default () => {
   const index = readIndex()
 
   displayCurrentBranch()
-
   indexDiff(index)
-
   workingDirectoryDiff(index)
 }
 

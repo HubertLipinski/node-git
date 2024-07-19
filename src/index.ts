@@ -83,7 +83,7 @@ cmd
 cmd
   .command('ls-files')
   .description('Show information about files in the index and the working tree')
-  .option('--verbose', 'Show verbose output')
+  .option('--verbose', 'Show verbose output. Includes details about the files.')
   .action((options) => {
     lsFiles(options)
   })
@@ -109,6 +109,7 @@ cmd
   .addOption(
     new Option('-t, --type <type>', 'Specify the expected type').choices(['blob', 'commit', 'tree']).default(null),
   )
+  .usage('<name> [--type <type>]')
   .action((name, options) => {
     revParse(name, options.type)
   })
@@ -149,7 +150,8 @@ cmd
 cmd
   .command('commit')
   .description('Record changes to the repository')
-  .addOption(new Option('-m, --message <message>', 'Commit message').default(null))
+  .addOption(new Option('-m, --message <message>', 'Commit message').makeOptionMandatory(true))
+  .usage('-m <message>')
   .action((options) => {
     commit(options.message)
   })

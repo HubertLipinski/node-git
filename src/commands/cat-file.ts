@@ -32,7 +32,6 @@ export default (hash: string, options: CommandOptions) => {
   }
 
   if (object.type === ObjectType.Commit) {
-    console.info('Object type: Commit')
     process.stdout.write(object.content.toString())
     return
   }
