@@ -134,9 +134,10 @@ cmd
 cmd
   .command('branch')
   .description('List, create, or delete branches')
-  .addArgument(new Argument('[branch]', 'Branch name').default(null))
-  .action((name) => {
-    branch(name)
+  .addArgument(new Argument('[branch]', 'Branch name. When not provided, displays list of all branches').default(null))
+  .addOption(new Option('-d --delete', 'Create a new branch named <branch-name>'))
+  .action((name, options) => {
+    branch(name, options)
   })
 
 cmd

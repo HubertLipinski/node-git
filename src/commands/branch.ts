@@ -1,16 +1,14 @@
-import fs from 'node:fs'
 import { localRef, refExists, refList } from '../utils/ref'
-import { repositoryHasChanges, resolveReference } from '../utils/repository'
-import { getActiveBranch } from '../utils/branch'
-import { absolutePath } from '../utils/directory'
+import { repositoryHasChanges } from '../utils/repository'
+import { createBranch, deleteBranch, getActiveBranch } from '../utils/branch'
+import { colorText } from '../utils/color'
 
-export default (name: string | null = null) => {
+export default (name: string | null = null, options: CommandOptions = {}) => {
   /**
    * we cannot list branches or create new ones in recently initialized repository.
    * Executing this command on empty git repository will result in error: fatal: not a valid object name: 'master'
    */
   if (!repositoryHasChanges()) {
-    process.stdout.write('')
     return
   }
 
@@ -20,8 +18,13 @@ export default (name: string | null = null) => {
     const refMap = refList()
     process.stdout.write('\n')
     refMap.forEach((_, branch) => {
-      process.stdout.write(`${branch === activeBranch ? '(*) ' : ''}${branch}\n`)
+      process.stdout.write(`${branch === activeBranch ? '* ' + colorText(branch, Color.GREEN) : branch}\n`)
     })
+    return
+  }
+
+  if (options.delete) {
+    deleteBranch(name)
     return
   }
 
@@ -32,9 +35,5 @@ export default (name: string | null = null) => {
 
   // create branch with given name
 
-  const head = resolveReference('HEAD')
-
-  fs.writeFileSync(absolutePath(localRef(name)), `${head}\n`)
-
-  process.stdout.write(`Created new branch: '${name}'`)
+  createBranch(name)
 }
