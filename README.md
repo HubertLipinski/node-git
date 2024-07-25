@@ -29,26 +29,30 @@
 <h3 align="center">node-git</h3>
 
   <p align="center">
-    Simple implementation of Git filesystem versioning in Node.js
+    Node.js implementation of Git filesystem versioning
     <br />
     <br />
-    <a href="https://github.com/HubertLipinski/node-git">View Demo</a>
-    ·
-    <a href="https://github.com/HubertLipinski/node-git/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    ·
-    <a href="https://github.com/HubertLipinski/node-git/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+
+[//]: # (    <a href="https://github.com/HubertLipinski/node-git">View Demo</a>)
+[//]: # (    ·)
+[//]: # (    <a href="https://github.com/HubertLipinski/node-git/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>)
+[//]: # (    ·)
+[//]: # (    <a href="https://github.com/HubertLipinski/node-git/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>)
   </p>
 </div>
 
 
 
 <!-- TABLE OF CONTENTS -->
-<details open>
+
+[//]: # (<details open>)
+<details>
   <summary>Table of Contents</summary>
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
+        <li><a href="#differences-with-git">Differences With Git</a></li>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
@@ -74,11 +78,22 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-TODO: description about the node-git
+My motivation for creating node-git was to understand the ins and outs of Git.
+Since Node.js is fairly limited in terms of memory management compared to C, this project implements only necessary functionalities of Git such as ``add``, ``commit``, ``checkout``, ``status``, ``log``, and many more commands used to manage file versions and internals objects.
+
+All commands were modeled after the original Git commands in terms of their behavior, parameters and names. Not all of them have their full original options support due to the fact that Git is a very powerful tool, and mapping it completely in Node,js goes beyond the scope of my original premise of keeping this project simple.
+
+Object files are stored in ``.node-git`` folder in your repository (after initialization).
+``node-git`` is compatible with git's files such as ``.gitignore`` and uses git's ``config`` files, so you don't need to configure it if You are already using Git.
+
+### Differences With Git
+Some of git's internal logic has been omitted due to lack of need or due to the sophistication of the functionality in question. In the future, the following list may change, and the given differences may be introduced to node-git
+* We do not use 32-bit ctime/mtime nanosecond fractions in INDEX file, only the 32-bit seconds
+* node-git only supports v2 INDEX file. 
+
+You can read more about INDEX file [here](https://github.com/git/git/blob/master/Documentation/gitformat-index.txt)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 ### Built With
 
@@ -89,8 +104,7 @@ TODO: description about the node-git
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+Requires Node v20+
 
 ### Installation
 
@@ -112,7 +126,9 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Implement additional commands
+The following functionalities are currently under development
+
+- [ ] Additional commands
   - [ ] rm
   - [ ] tag
   - [ ] config
@@ -175,7 +191,6 @@ Project Link: [https://github.com/HubertLipinski/node-git](https://github.com/Hu
 * [WYAG](https://wyag.thb.lt/#intro)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
