@@ -76,10 +76,10 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![node-git CLI][product-screenshot]
 
 My motivation for creating node-git was to understand the ins and outs of Git.
-Since Node.js is fairly limited in terms of memory management compared to C, this project implements only necessary functionalities of Git such as ``add``, ``commit``, ``checkout``, ``status``, ``log``, and many more commands used to manage file versions and internals objects.
+This project implements only necessary functionalities of Git such as ``add``, ``commit``, ``checkout``, ``status``, ``log``, and many more commands used to manage file versions and internals objects, providing all the necessary Git's commands You are using on day-to-day basis.
 
 All commands were modeled after the original Git commands in terms of their behavior, parameters and names. Not all of them have their full original options support due to the fact that Git is a very powerful tool, and mapping it completely in Node,js goes beyond the scope of my original premise of keeping this project simple.
 
@@ -88,10 +88,10 @@ Object files are stored in ``.node-git`` folder in your repository (after initia
 
 ### Differences With Git
 Some of git's internal logic has been omitted due to lack of need or due to the sophistication of the functionality in question. In the future, the following list may change, and the given differences may be introduced to node-git
-* We do not use 32-bit ctime/mtime nanosecond fractions in INDEX file, only the 32-bit seconds
+* node-git do not use 32-bit ctime/mtime nanosecond fractions in INDEX file, only the 32-bit seconds
 * node-git only supports v2 INDEX file. 
 
-You can read more about INDEX file [here](https://github.com/git/git/blob/master/Documentation/gitformat-index.txt)
+You can read more details about INDEX file [here](https://github.com/git/git/blob/master/Documentation/gitformat-index.txt)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -150,7 +150,7 @@ See the [open issues](https://github.com/HubertLipinski/node-git/issues) for a f
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue.
 Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
@@ -206,7 +206,7 @@ Project Link: [https://github.com/HubertLipinski/node-git](https://github.com/Hu
 [license-url]: https://github.com/HubertLipinski/node-git/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/hubert-lipinski/
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: https://i.imgur.com/8YhXe4Q.png
 [Node-logo]: https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
 [Node-url]: https://nodejs.org/en
 [TS-logo]: https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white
