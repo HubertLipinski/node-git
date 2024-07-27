@@ -32,12 +32,11 @@
     Node.js implementation of Git filesystem versioning
     <br />
     <br />
-
-[//]: # (    <a href="https://github.com/HubertLipinski/node-git">View Demo</a>)
-[//]: # (    ·)
-[//]: # (    <a href="https://github.com/HubertLipinski/node-git/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>)
-[//]: # (    ·)
-[//]: # (    <a href="https://github.com/HubertLipinski/node-git/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>)
+    <a href="https://github.com/HubertLipinski/node-git">View Demo</a>
+    ·
+    <a href="https://github.com/HubertLipinski/node-git/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    ·
+    <a href="https://github.com/HubertLipinski/node-git/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 </div>
 
