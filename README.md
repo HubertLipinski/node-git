@@ -23,7 +23,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/HubertLipinski/node-git">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://i.imgur.com/ja2lHSw.png" alt="Logo" width="120" height="120">
   </a>
 
 <h3 align="center">node-git</h3>
@@ -32,8 +32,7 @@
     Node.js implementation of Git filesystem versioning
     <br />
     <br />
-    <a href="https://github.com/HubertLipinski/node-git">View Demo</a>
-    ·
+    <a href="https://github.com/HubertLipinski/node-git" style="display: none">View Demo</a>
     <a href="https://github.com/HubertLipinski/node-git/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
     <a href="https://github.com/HubertLipinski/node-git/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
@@ -110,15 +109,37 @@ Requires Node v20+
   ```sh
   npm install node-git -g
   ```
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+1. Initialize node-git repository  
+```bash
+node-git init
+ ```
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+2. Add changes to the INDEX file
+```bash
+node-git add file.txt
+
+node-git status # check status of INDEX and working tree
+ ```
+
+3. Commit changes
+```bash
+node-git commit -m "First node-git commit!"
+ ```
+
+4. That's it! You can verify added files by running the following commands
+```bash
+node-git ls-files --verbose # show detailed information about INDEX and working tree 
+node-git log # show commit history
+ ```
+
+### For more information, use help command
+```bash
+node-git help [command]
+ ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -127,11 +148,6 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 The following functionalities are currently under development
 
-- [ ] Additional commands
-  - [x] rm
-  - [ ] tag
-  - [ ] config
-  - [ ] diff
 - [ ] Remote repository support
     - [ ] Remote command
     - [ ] Clone
@@ -205,7 +221,7 @@ Project Link: [https://github.com/HubertLipinski/node-git](https://github.com/Hu
 [license-url]: https://github.com/HubertLipinski/node-git/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/hubert-lipinski/
-[product-screenshot]: https://i.imgur.com/8YhXe4Q.png
+[product-screenshot]: https://i.imgur.com/Yq8c4jC.png
 [Node-logo]: https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
 [Node-url]: https://nodejs.org/en
 [TS-logo]: https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white
