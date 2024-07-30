@@ -16,6 +16,7 @@ import add from './commands/add'
 import commit from './commands/commit'
 import checkout from './commands/checkout'
 import showIgnore from './commands/show-ignore'
+import remove from './commands/remove'
 
 const cmd = new Command()
   .name('node-git')
@@ -146,6 +147,14 @@ cmd
   .description('Add file contents to the index')
   .action((path) => {
     add(path)
+  })
+
+cmd
+  .command('rm')
+  .addArgument(new Argument('<paths...>', 'Files to remove').argRequired())
+  .description('Remove files from the working tree and the index.')
+  .action((paths) => {
+    remove(paths)
   })
 
 cmd
