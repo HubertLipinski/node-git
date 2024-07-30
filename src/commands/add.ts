@@ -17,24 +17,24 @@ export default (dir: string = '.') => {
     const filePath = cleanFsPath(path.relative(workingDirectory(), file.fullpath()))
     const hash = writeBlobObject(file.fullpath())
 
-    let item: IndexEntry | undefined = entries.find((entry) => entry.fileName === filePath)
+    const item: IndexEntry | undefined = entries.find((entry) => entry.fileName === filePath)
     const hasChanged = nameToHash.has(filePath) && nameToHash.get(filePath) !== hash
 
-    if (!item || hasChanged) {
-      item = {
-        createdTime: file.birthtime as Date,
-        modifiedTime: file.mtime as Date,
-        dev: file?.dev?.toString(16) as string,
-        ino: file.ino?.toString(32) as string,
-        mode: file.mode?.toString(16) as string,
-        uid: file.uid?.toString(16) as string,
-        gid: file.gid?.toString(16) as string,
-        size: file.size as number,
-        hash: hash,
-        fileName: filePath,
-      }
-      changed.push(item)
+    const element: IndexEntry = {
+      createdTime: file.birthtime as Date,
+      modifiedTime: file.mtime as Date,
+      dev: file?.dev?.toString(16) as string,
+      ino: file.ino?.toString(32) as string,
+      mode: file.mode?.toString(16) as string,
+      uid: file.uid?.toString(16) as string,
+      gid: file.gid?.toString(16) as string,
+      size: file.size as number,
+      hash: hash,
+      fileName: filePath,
     }
+
+    if (!item) entries.push(element)
+    else if (hasChanged) changed.push(element)
   }
 
   entries = entries.map((entry) => changed.find((item) => item.fileName === entry.fileName) || entry)
