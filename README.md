@@ -128,7 +128,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 The following functionalities are currently under development
 
 - [ ] Additional commands
-  - [ ] rm
+  - [x] rm
   - [ ] tag
   - [ ] config
   - [ ] diff
