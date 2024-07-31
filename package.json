@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@trolxu/node-git",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simple implementation of Git filesystem in Node.js",
   "main": "build/index.min.js",
   "bin": {
