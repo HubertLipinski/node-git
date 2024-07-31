@@ -107,7 +107,7 @@ Requires Node v20+
 ### Installation
 
   ```sh
-  npm install node-git -g
+npm i @trolxu/node-git -g
   ```
 
 <!-- USAGE EXAMPLES -->

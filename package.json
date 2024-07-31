@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "node-git",
+  "name": "@trolxu/node-git",
   "version": "1.0.0",
   "description": "Simple implementation of Git filesystem in Node.js",
   "main": "build/index.min.js",
@@ -16,7 +16,8 @@
   },
   "keywords": [
     "cli",
-    "git implementation"
+    "git",
+    "file versioning"
   ],
   "author": "Hubert Lipiński <hubertlipinskipl@gmail.com>",
   "license": "MIT",
