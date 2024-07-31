@@ -25,14 +25,14 @@ const cmd = new Command()
 
 cmd
   .command('init')
-  .description('Create an empty node-git repository or reinitialize an existing one.')
+  .description('Create an empty node-git repository or reinitialize an existing one')
   .option('-f', 'Force reinitialization of existing repository')
   .usage(' ')
   .action((opts) => init(opts))
 
 cmd
   .command('cat-file')
-  .description('Provide information for repository objects.')
+  .description('Provide information for repository objects')
   .argument('<sha1>', 'Object hash')
   .option('-p', 'Pretty print object content')
   .option('-t', 'Instead of the content, show the object type identified by <object>')
@@ -44,7 +44,7 @@ cmd
 
 cmd
   .command('hash-object')
-  .description('Calculate SHA1 hash of given file and optionally create a blob from given file.')
+  .description('Calculate SHA1 hash of given file and optionally create a blob from given file')
   .argument('<file>', 'Path to file')
   .option('-w', 'Write object to repository')
   .usage('[-w] <file>')
@@ -54,8 +54,8 @@ cmd
 
 cmd
   .command('write-tree')
-  .description('Create a tree object from the current index.')
-  .argument('[path]', 'Root of the tree. Relative to the working directory.')
+  .description('Create a tree object from the current index')
+  .argument('[path]', 'Root of the tree. Relative to the working directory')
   .usage('[path]')
   .action((path) => {
     process.stdout.write(writeTree(path))
@@ -75,7 +75,7 @@ cmd
 cmd
   .command('log')
   .description('Show commit logs')
-  .addArgument(new Argument('[commit]', 'Commit to start at.').default(null).argOptional())
+  .addArgument(new Argument('[commit]', 'Commit to start at').default(null).argOptional())
   .usage('<commit>')
   .action((commit) => {
     log(commit)
@@ -84,7 +84,7 @@ cmd
 cmd
   .command('ls-files')
   .description('Show information about files in the index and the working tree')
-  .option('--verbose', 'Show verbose output. Includes details about the files.')
+  .option('--verbose', 'Show verbose output. Includes details about the files')
   .action((options) => {
     lsFiles(options)
   })
@@ -124,7 +124,7 @@ cmd
   .addOption(
     new Option(
       '--commit <commit>',
-      'Restore working tree files from the given commit. This will detach HEAD from the current branch.',
+      'Restore working tree files from the given commit. This will detach HEAD from the current branch',
     ),
   )
   .usage('<branch-name> [--commit <commit>] [directory]')
@@ -152,7 +152,7 @@ cmd
 cmd
   .command('rm')
   .addArgument(new Argument('<paths...>', 'Files to remove').argRequired())
-  .description('Remove files from the working tree and the index.')
+  .description('Remove files from the working tree and the index')
   .action((paths) => {
     remove(paths)
   })
@@ -168,7 +168,7 @@ cmd
 
 cmd
   .command('show-ignore')
-  .description('Show all ignored paths. Reads all .gitignore files in the repository.')
+  .description('Show all ignored paths. Reads all .gitignore files in the repository')
   .action(() => {
     showIgnore()
   })
