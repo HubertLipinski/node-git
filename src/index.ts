@@ -21,7 +21,7 @@ import remove from './commands/remove'
 const cmd = new Command()
   .name('node-git')
   .usage('[option] <command>')
-  .version('1.0.0', '-v, --version', 'Output the current version')
+  .version('1.0.2', '-v, --version', 'Output the current version')
 
 cmd
   .command('init')
