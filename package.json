@@ -3,9 +3,9 @@
   "name": "node-git",
   "version": "1.0.0",
   "description": "Simple implementation of Git filesystem in Node.js",
-  "main": "dist/index.js",
+  "main": "build/index.min.js",
   "bin": {
-    "node-git": "./build/index.min.js"
+    "node-git": "build/index.min.js"
   },
   "scripts": {
     "build": "rollup --config",
@@ -19,7 +19,7 @@
     "git implementation"
   ],
   "author": "Hubert Lipiński <hubertlipinskipl@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@eslint/js": "^9.5.0",
     "@rollup/plugin-commonjs": "^26.0.1",
@@ -46,5 +46,13 @@
     ".ts": [
       "eslint --quiet --fix"
     ]
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HubertLipinski/node-git.git"
+  },
+  "bugs": {
+    "url": "https://github.com/HubertLipinski/node-git/issues"
+  },
+  "homepage": "https://github.com/HubertLipinski/node-git#readme"
 }
