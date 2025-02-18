@@ -88,7 +88,7 @@ Some of git's internal logic has been omitted due to lack of need or due to the 
 * node-git do not use 32-bit ctime/mtime nanosecond fractions in INDEX file, only the 32-bit seconds
 * node-git only supports v2 INDEX file. 
 
-You can read more details about INDEX file [here](https://github.com/git/git/blob/master/Documentation/gitformat-index.txt)
+You can read more details about INDEX file [here](https://git-scm.com/docs/index-format)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
